@@ -11,3 +11,5 @@ Markdown extraction of the five-day course (by Swapravo Sinha Roy), one file per
 | Day 5 | [day-5.md](day-5.md) | 5.1 Docs & SOPs<br>5.2 Skills & starter kits<br>5.3 Debugging & test generation<br>5.4 Guardrails & team conventions |
 
 Topics are numbered 1–43 continuously across the five days.
+
+The topic-by-topic plan for building the demo app is in [build-plan.md](build-plan.md).
