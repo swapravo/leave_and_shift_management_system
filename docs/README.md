@@ -12,6 +12,8 @@ if code and docs disagree, fix one of them deliberately.
 | 4 | [Architecture](04-architecture.md) | Diagrams: context, containers, components, key sequences, deployment |
 | 5 | [Data model](05-data-model.md) | Tables, columns, constraints, ER diagram, state machines |
 | 6 | [API contract](openapi.yaml) | OpenAPI 3.1 spec for every endpoint |
+| 7 | [Testing strategy](06-testing-strategy.md) | Playwright E2E, pytest, Vitest: setup, data, catalogue, how to run |
+| — | [Decision log](decision-log.md) | **Why** every change to the repo was made (append-only) |
 
 Source requirement: *Leave & Shift Management System — Business Requirement Document* (Swapravo Sinha Roy).
 

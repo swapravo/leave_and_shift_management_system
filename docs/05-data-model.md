@@ -295,4 +295,5 @@ stateDiagram-v2
 Billing: General Mon–Fri) each with a manager and 3–8 employees; leave types Annual (18, cap 5), Sick (12, cap 0),
 Casual (6, cap 0); last year's accrual, some leave taken and the year-end close; this year's accrual to date; four
 weeks of roster; one approved and two pending upcoming leaves; one deliberate coverage gap today.
-All seeded users share the password `password123`.
+All seeded users share the password `password123`. The seed is deterministic (same ids every run) and sets a
+fixed past `password_changed_at`, so the E2E reset endpoint can reload it without invalidating test logins.

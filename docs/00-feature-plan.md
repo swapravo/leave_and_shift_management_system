@@ -4,7 +4,7 @@
 The BRD asks for **one place to manage leave and shifts, so a coverage gap can't slip through unnoticed**.
 Roles: Employee, Manager, HR Admin. Scope: one org, one location, multiple teams; multiple leave types with
 one accrual rule; coverage = minimum headcount per shift.
-Out of scope (BRD): payroll/HRIS integration (data is seeded), multi-level approval chains.
+Out of scope: see the explicit [Out of scope](#out-of-scope-explicit) list below.
 
 **Success criteria (BRD) — each becomes a named automated test**
 1. Applying for leave correctly reduces the employee's balance.
@@ -71,7 +71,85 @@ Nobody may get a free day off by cancelling after their shifts were removed.
 | Coverage | **Hard block at apply**: leave can't be submitted if any of the person's shifts in the range would drop below min headcount. Other people's **pending** leave counts. Re-checked at approval. |
 | Roster guards | Can't assign someone on approved/pending leave, double-book overlapping shifts, or assign deactivated users. |
 | Swaps | **1-for-1 exchange** within a team, **future shifts only**: A offers own shift and picks a specific shift of teammate B → B accepts → manager approves → assignments exchanged. Either party on approved/pending leave on either date → blocked. |
-| Extras in v1 | Cancel / withdraw leave only. Not in v1: half-days, scheduled reminders, CSV export. |
+| Extras in v1 | Cancel / withdraw leave only. Everything else is in [Out of scope](#out-of-scope-explicit). |
+
+### Testing
+| Topic | Decision |
+|---|---|
+| Layers | **Playwright E2E** (TypeScript `@playwright/test`) for every user journey and the BRD success criteria; **pytest** for backend rules; **Vitest** for frontend helpers. |
+| Browsers | **Chromium only**, plus a mobile-width Chromium project. |
+| Test data | **Fresh seeded DB per E2E test** via a test-only reset endpoint (exists only when `LSM_TEST_MODE=1`), with a pinned "today". |
+| Where | **Local only** — all suites run before every push; no CI. |
+| Details | [Testing strategy](06-testing-strategy.md) |
+
+### Decision log
+Every change to the repo is recorded in the [decision log](decision-log.md) with **why** it was made (git history
+records *what*). Commits reference the entry (`Refs: D-NNN`); changed decisions get a new entry that supersedes
+the old one.
+
+## Out of scope (explicit)
+Nothing on this list will be built in v1. **Source** shows where the exclusion comes from:
+*BRD* = the requirement document; *Confirmed* = decided with you in planning; *Proposed* = my proposal, not yet
+confirmed. Each Proposed row needs a yes/no from you.
+
+### Integrations & platform
+| Out of scope | Source | Instead |
+|---|---|---|
+| Payroll / HRIS integration | BRD | Data is seeded; users are added by HR Admins |
+| Multiple organisations (multi-tenant) | BRD | One organisation |
+| Multiple locations | BRD | One location |
+| Multiple time zones | Confirmed | IST only |
+| Email, SMS, push, Slack/Teams notifications | Confirmed | In-app notifications only |
+| Scheduled reminders / background jobs | Confirmed | Accrual catch-up and housekeeping run at startup and on demand |
+| CSV / Excel export of anything | Confirmed | — |
+| SSO / OAuth / LDAP, MFA | Proposed | Email + password |
+| Refresh tokens, "remember me", server-side session revocation | Confirmed | 8 h JWT; per-request DB check |
+| Self-registration and self-service "forgot password" | Proposed | HR Admin creates users and resets passwords |
+| Native mobile apps | Proposed | Responsive web app (usable at 360 px) |
+| Languages other than English (i18n) | Proposed | English UI |
+| CI pipeline | Confirmed | Tests run locally before every push (see [Testing strategy](06-testing-strategy.md)) |
+| Docker / container images, cloud deployment, high availability | Proposed | Single uvicorn process + SQLite file |
+| Database migration tooling | Proposed | Schema created from `schema.sql`; version recorded for later |
+| Hard delete / data-erasure workflows | Confirmed | Soft delete only; history kept |
+
+### Organisation & approvals
+| Out of scope | Source | Instead |
+|---|---|---|
+| Multi-level approval chains | BRD | Single approver |
+| Delegation / acting managers / out-of-office approvers | Confirmed (by "team without manager is blocked") | HR assigns a new manager |
+| More than one manager per team; one person in several teams | Confirmed | One manager per team; one team per person |
+| Departments as managed entities (hierarchy, department heads) | Confirmed | Department is a text label on a team |
+| HR Admins taking leave or being rostered | Confirmed | HR Admins only administer |
+
+### Leave & balances
+| Out of scope | Source | Instead |
+|---|---|---|
+| Country-specific policy engine; more than one accrual rule | BRD | One rule: monthly 1/12 accrual + year-end carry-forward cap |
+| Half-day / hourly leave | Confirmed | Whole days, Mon–Fri |
+| Public-holiday calendar | Confirmed (by "always Mon–Fri") | Holidays are not excluded from the day count |
+| Pro-rated accrual for the join month | Confirmed | Full credit from the join month |
+| Negative balances / borrowing ahead | Confirmed | Blocked |
+| Backdated leave (starting before today) | Confirmed | — |
+| A request spanning two calendar years | Confirmed | Two requests |
+| Cancelling part of a leave, or cancelling once it has started | Confirmed | Cancel only before it starts |
+| Leave encashment / payout, comp-off earning rules | Proposed | HR manual balance adjustment with a reason |
+| Attachments (e.g. medical certificates) | Proposed | Free-text reason |
+| Leave-type restrictions (notice periods, max consecutive days, blackout dates) | Proposed | Only the rules listed in the plan |
+
+### Shifts & coverage
+| Out of scope | Source | Instead |
+|---|---|---|
+| Skill-based / role-based coverage | BRD | Minimum headcount per shift |
+| Automatic roster generation / optimisation | Proposed | Manual roster + "copy previous week" |
+| Open-shift marketplace, give-away/cover swaps, swaps across teams | Confirmed | 1-for-1 swaps within a team |
+| Editing past rosters | Confirmed | Past dates read-only |
+| Attendance tracking, clock-in/out, timesheets, overtime, labour-law rest rules | Proposed | "Expected attendance" = who is rostered / on leave today (dashboard) |
+
+### Reporting
+| Out of scope | Source | Instead |
+|---|---|---|
+| Analytics / reports beyond the dashboard and calendar | Proposed | Dashboard, calendar, balances, audit log |
+| Audit log export or editing | Confirmed (append-only) | Read-only viewer with filters |
 
 ## Decisions made while writing the docs — please review
 These weren't discussed; they're the behaviour the docs specify unless you say otherwise.

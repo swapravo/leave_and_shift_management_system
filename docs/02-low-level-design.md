@@ -14,6 +14,7 @@ Table names refer to the [data model](05-data-model.md); endpoints to the [API c
 | P2 | Clock | — | — |
 | P3 | Errors | — | — |
 | P4 | Seed | (writes all) | all |
+| P5 | Test support | — (resets all) | P1 P4 |
 | C1 | Identity & Access | — (reads `users`) | P1 P2 P3 |
 | C2 | Org Admin | `users`, `teams` | C5 C6 C7 C8 C11 C12 |
 | C3 | Leave Type Config | `leave_types` | C5 C11 |
@@ -72,6 +73,13 @@ each other through narrow functions only (C6 → `roster.remove_for_leave` / `ro
 ## P4 Seed — `app/seed.py`
 `python -m app.seed [--reset] [--db PATH]`. Builds the demo data described in the data model §5.5 relative to
 `clock.today()`. Inserts directly (no notifications); writes one `seed` audit row.
+
+## P5 Test support — `routers/test_support.py`
+`POST /api/test/reset` — **registered only when `LSM_TEST_MODE=1`** (otherwise the route doesn't exist → 404).
+Deletes all rows (audit-log triggers are dropped and re-created for the reset), re-runs the P4 seed for
+`clock.today()`, returns `{"today": "YYYY-MM-DD"}`. No authentication. Used by Playwright before every test
+(see [Testing strategy](06-testing-strategy.md)). Seeded users get a fixed past `password_changed_at` so JWTs
+issued earlier in the run stay valid after a reset.
 
 ---
 

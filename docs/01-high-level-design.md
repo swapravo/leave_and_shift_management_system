@@ -16,8 +16,10 @@ shift swap is checked against each shift's **minimum headcount** before it is ac
 ## 1.3 Scope
 In: multiple teams in one org and location; multiple leave types with one accrual rule; coverage = minimum
 headcount per shift; single-level approval; in-app notifications; IST only.
-Out: payroll/HRIS integration (data is seeded), multi-level approvals, skill-based coverage, multi-org/location,
-half-days, email, scheduled reminders, CSV export.
+Out (headline items): payroll/HRIS integration (data is seeded), multi-level approvals, skill-based coverage,
+multi-org/location, half-days, public holidays, email and other channels, scheduled reminders, CSV export,
+SSO/MFA, CI. The complete list, with the source of each exclusion, is in the
+[feature plan](00-feature-plan.md#out-of-scope-explicit).
 
 ## 1.4 System overview
 A browser single-page app (React + TypeScript) talks JSON over HTTPS to a FastAPI backend, which stores

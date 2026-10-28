@@ -35,6 +35,8 @@ tags:
     description: Calendar and dashboard (C10)
   - name: audit
   - name: notifications
+  - name: test
+    description: Test-only endpoints; exist only when LSM_TEST_MODE=1 (Playwright E2E runs)
 
 paths:
   /api/health:
@@ -854,6 +856,29 @@ paths:
       responses:
         "204": { description: Marked read }
         "401": { $ref: "#/components/responses/Unauthorized" }
+
+  # ---------------------------------------------------------------- test support (P5)
+  /api/test/reset:
+    post:
+      tags: [test]
+      summary: Reset the database to the seeded demo data (test mode only)
+      description: |
+        **Only registered when the server runs with `LSM_TEST_MODE=1`**; in any other mode this path does not
+        exist and returns 404. Wipes all data and re-runs the seed for the pinned "today". Playwright calls it
+        before every E2E test.
+      security: []
+      responses:
+        "200":
+          description: Database reset
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [today]
+                properties:
+                  today: { $ref: "#/components/schemas/Date" }
+        "404":
+          description: Not in test mode
 
 components:
   securitySchemes:

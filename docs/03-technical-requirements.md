@@ -18,6 +18,7 @@
 | Routing | React Router | 7.18.x |
 | Build tool / dev server | Vite (+ @vitejs/plugin-react) | 8.3.5 |
 | Frontend tests | Vitest + Testing Library + jsdom | vitest 5.0.5 |
+| E2E tests | Playwright `@playwright/test` (matches the pre-installed Chromium build) | 1.63.0 |
 | Styling | Plain CSS with design tokens (CSS variables); no UI framework | — |
 | Runtime (frontend tooling) | Node.js | 22.x |
 
@@ -78,14 +79,17 @@ Rule: **no blocking call inside an `async def`** (no stdlib `sqlite3`, no `time.
 | `LSM_JWT_SECRET` | *(required in prod; dev generates one per run and warns)* | HS256 signing key |
 | `LSM_JWT_HOURS` | `8` | Token lifetime |
 | `LSM_COOKIE_SECURE` | `0` | Set `1` behind HTTPS |
-| `LSM_TODAY` | *(unset)* | Pin "today" for demos (`YYYY-MM-DD`) |
+| `LSM_TODAY` | *(unset)* | Pin "today" for demos and E2E runs (`YYYY-MM-DD`) |
+| `LSM_TEST_MODE` | `0` | `1` registers the test-only `POST /api/test/reset` endpoint (E2E only; never in prod) |
 
 ## 3.8 Testing & quality gates
-- Backend: pytest. Service-level tests (async, via anyio) and API tests via `TestClient`. Each test gets a fresh
-  temporary DB and a pinned "today". The three BRD success criteria are named tests.
-- Frontend: Vitest for date helpers and key components; `tsc` type check.
-- End-to-end smoke: Playwright (pre-installed Chromium) against the seeded app.
-- Must pass before every push: `pytest`, `npm run typecheck`, `npm test`, `npm run build`.
+Full detail in [Testing strategy](06-testing-strategy.md). Summary:
+- **E2E**: Playwright (`@playwright/test`, TypeScript), Chromium + mobile-width Chromium, against the real app
+  (built frontend served by FastAPI) with a fresh seeded DB per test and a pinned "today".
+- **Backend rules**: pytest (service tests via anyio, API tests via `TestClient`), fresh temporary DB per test.
+- **Frontend units**: Vitest for pure helpers and a few components; `tsc` type check.
+- **Local only, no CI.** Everything must pass before every push: `app/scripts/test-all.sh` runs pytest, typecheck,
+  Vitest, build and Playwright in that order and stops at the first failure.
 
 ## 3.9 Run commands (target)
 ```bash
