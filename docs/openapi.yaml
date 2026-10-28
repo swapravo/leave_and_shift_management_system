@@ -1,0 +1,1431 @@
+openapi: 3.1.0
+info:
+  title: Leave & Shift Management System API
+  version: 0.1.0
+  description: |
+    JSON API for the Leave & Shift Management System (see docs/02-low-level-design.md).
+
+    **Auth**: `POST /api/auth/login` sets an httpOnly cookie `lsm_token` holding a JWT (HS256, 8 h).
+    Every other endpoint (except `/api/health`) requires it. The user is re-loaded from the database on
+    each request, so deactivation, role changes and password resets take effect immediately.
+
+    **Conventions**: dates are `YYYY-MM-DD` (IST calendar dates), times `HH:MM` (24 h), timestamps ISO-8601
+    with `+05:30`. Leave quantities are numbers with up to 2 decimals. Write requests must send
+    `Content-Type: application/json`.
+
+    **Errors** always use the `Error` schema. `code` is stable and machine-readable.
+servers:
+  - url: http://localhost:8000
+    description: Local backend (or Vite dev server on :5173, which proxies /api)
+security:
+  - cookieAuth: []
+tags:
+  - name: auth
+  - name: users
+    description: HR Admin user management (C2)
+  - name: teams
+  - name: leave-types
+  - name: shift-templates
+  - name: accrual
+  - name: balances
+  - name: leave
+  - name: roster
+  - name: swaps
+  - name: views
+    description: Calendar and dashboard (C10)
+  - name: audit
+  - name: notifications
+
+paths:
+  /api/health:
+    get:
+      tags: [auth]
+      summary: Liveness check
+      security: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: { ok: { type: boolean } }
+                required: [ok]
+
+  # ---------------------------------------------------------------- auth (C1)
+  /api/auth/login:
+    post:
+      tags: [auth]
+      summary: Sign in with email and password
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LoginRequest" }
+      responses:
+        "200":
+          description: Signed in. Sets the `lsm_token` cookie.
+          headers:
+            Set-Cookie:
+              description: "`lsm_token=<JWT>; HttpOnly; SameSite=Lax; Path=/; Max-Age=28800` (+ `Secure` behind HTTPS)"
+              schema: { type: string }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Me" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { $ref: "#/components/responses/UnprocessableEntity" }
+  /api/auth/logout:
+    post:
+      tags: [auth]
+      summary: Sign out (clears the cookie)
+      security: []
+      responses:
+        "204": { description: Cookie cleared }
+  /api/auth/me:
+    get:
+      tags: [auth]
+      summary: The signed-in user, plus the server's IST date
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Me" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  # ---------------------------------------------------------------- users (C2)
+  /api/users:
+    get:
+      tags: [users]
+      summary: List users (HR Admin)
+      parameters:
+        - { name: include_inactive, in: query, schema: { type: boolean, default: false } }
+        - { name: team_id, in: query, schema: { type: integer } }
+      responses:
+        "200":
+          description: Users
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/User" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      tags: [users]
+      summary: Create a user (HR Admin)
+      description: Accrual is caught up from the join month for employees and managers.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UserCreate" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/users/{user_id}:
+    parameters:
+      - $ref: "#/components/parameters/UserId"
+    patch:
+      tags: [users]
+      summary: Edit a user (HR Admin)
+      description: |
+        Changing team (or role to hr_admin) releases the user's future shifts. A new password invalidates the
+        user's existing tokens. You can't change your own role or demote the last active HR Admin.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UserUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+    delete:
+      tags: [users]
+      summary: Deactivate a user — soft delete (HR Admin)
+      description: |
+        Sets `active = false`, removes future shift assignments, cancels pending leave and open swaps, and
+        clears them as team manager. History is kept. You can't deactivate yourself or the last HR Admin.
+      responses:
+        "200":
+          description: The deactivated user
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+
+  # ---------------------------------------------------------------- teams (C2)
+  /api/teams:
+    get:
+      tags: [teams]
+      summary: List teams (any signed-in user)
+      responses:
+        "200":
+          description: Teams
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/Team" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      tags: [teams]
+      summary: Create a team (HR Admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TeamCreate" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Team" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/teams/{team_id}:
+    parameters:
+      - $ref: "#/components/parameters/TeamId"
+    patch:
+      tags: [teams]
+      summary: Edit a team / assign its manager (HR Admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TeamUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Team" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+
+  # ---------------------------------------------------------------- leave types (C3)
+  /api/leave-types:
+    get:
+      tags: [leave-types]
+      summary: List leave types
+      description: Employees and managers get active types; HR Admins get all when `include_inactive=true`.
+      parameters:
+        - { name: include_inactive, in: query, schema: { type: boolean, default: false } }
+      responses:
+        "200":
+          description: Leave types
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/LeaveType" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      tags: [leave-types]
+      summary: Create a leave type (HR Admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LeaveTypeCreate" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LeaveType" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/leave-types/{leave_type_id}:
+    parameters:
+      - { name: leave_type_id, in: path, required: true, schema: { type: integer } }
+    patch:
+      tags: [leave-types]
+      summary: Edit or archive a leave type (HR Admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LeaveTypeUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LeaveType" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+
+  # ---------------------------------------------------------------- shift templates (C4)
+  /api/shift-templates:
+    get:
+      tags: [shift-templates]
+      summary: List shift templates
+      parameters:
+        - { name: team_id, in: query, schema: { type: integer } }
+        - name: include_inactive
+          in: query
+          description: Only honoured for HR Admins and the team's manager.
+          schema: { type: boolean, default: false }
+      responses:
+        "200":
+          description: Shift templates
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/ShiftTemplate" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      tags: [shift-templates]
+      summary: Create a shift template (HR Admin, or the team's manager)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ShiftTemplateCreate" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ShiftTemplate" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/shift-templates/{template_id}:
+    parameters:
+      - { name: template_id, in: path, required: true, schema: { type: integer } }
+    patch:
+      tags: [shift-templates]
+      summary: Edit or archive a shift template (HR Admin, or the team's manager)
+      description: Archiving removes the template's future assignments and cancels open swaps on them.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ShiftTemplateUpdate" }
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ShiftTemplate" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+
+  # ---------------------------------------------------------------- accrual & balances (C5)
+  /api/accrual/monthly:
+    post:
+      tags: [accrual]
+      summary: Run monthly accrual for a month (HR Admin, idempotent)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [year, month]
+              properties:
+                year: { type: integer, minimum: 2000, maximum: 2100 }
+                month: { type: integer, minimum: 1, maximum: 12 }
+      responses:
+        "200":
+          description: Number of new ledger rows (0 if already run)
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [entries_created]
+                properties: { entries_created: { type: integer } }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/accrual/year-end:
+    post:
+      tags: [accrual]
+      summary: Close a year — carry forward up to each type's cap, rest lapses (HR Admin, idempotent)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [closing_year]
+              properties:
+                closing_year: { type: integer, minimum: 2000, maximum: 2100 }
+      responses:
+        "200":
+          description: Number of (user, leave type) balances closed
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [balances_closed]
+                properties: { balances_closed: { type: integer } }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/balances:
+    get:
+      tags: [balances]
+      summary: Leave balances per type for a user and year
+      description: Visible to the user, the manager of their team, and HR Admins. Defaults to self and the current year.
+      parameters:
+        - { name: user_id, in: query, schema: { type: integer } }
+        - { name: year, in: query, schema: { type: integer } }
+      responses:
+        "200":
+          description: Balances
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/Balance" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/balances/ledger:
+    get:
+      tags: [balances]
+      summary: Every balance movement for a user and year
+      parameters:
+        - { name: user_id, in: query, schema: { type: integer } }
+        - { name: year, in: query, schema: { type: integer } }
+      responses:
+        "200":
+          description: Ledger rows, oldest first
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/LedgerEntry" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/balances/adjustments:
+    post:
+      tags: [balances]
+      summary: Manually adjust a balance with a reason (HR Admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/BalanceAdjustment" }
+      responses:
+        "200":
+          description: The user's balances after the adjustment
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/Balance" } }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  # ---------------------------------------------------------------- leave requests (C6)
+  /api/leave-requests:
+    get:
+      tags: [leave]
+      summary: List leave requests
+      parameters:
+        - name: scope
+          in: query
+          required: true
+          description: |
+            `mine` — the caller's own requests (newest first);
+            `pending` — requests the caller can approve;
+            `decided` — the last 50 requests the caller decided.
+          schema: { type: string, enum: [mine, pending, decided] }
+      responses:
+        "200":
+          description: Leave requests
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/LeaveRequest" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      tags: [leave]
+      summary: Apply for leave (employee or manager)
+      description: |
+        Checks, in order: role, leave type active, dates (not past, same year, at least one Mon–Fri day),
+        team has a manager (employees), no overlap, enough available balance, coverage of every shift the
+        caller is rostered on in the range (others' pending leave counts).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LeaveRequestCreate" }
+      responses:
+        "201":
+          description: Created as pending; approver notified
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LeaveRequest" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409":
+          description: "`LEAVE_OVERLAP`, `INSUFFICIENT_BALANCE`, `TEAM_HAS_NO_MANAGER` or `COVERAGE_VIOLATION` (details = CoverageViolation[])"
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /api/leave-requests/preview:
+    post:
+      tags: [leave]
+      summary: Dry-run an application (live form feedback); never saves
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LeaveRequestCreate" }
+      responses:
+        "200":
+          description: What applying would do
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LeavePreview" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/leave-requests/{leave_id}:
+    parameters:
+      - $ref: "#/components/parameters/LeaveId"
+    get:
+      tags: [leave]
+      summary: One request with its removed shifts and refund days
+      description: Visible to the requester, their approver(s) and HR Admins.
+      responses:
+        "200":
+          description: Leave request detail
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LeaveRequestDetail" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/leave-requests/{leave_id}/decision:
+    parameters:
+      - $ref: "#/components/parameters/LeaveId"
+    post:
+      tags: [leave]
+      summary: Approve or reject (the requester's approver)
+      description: |
+        Approve re-checks balance and coverage, deducts the days, and removes the requester from every shift
+        they were rostered on during the leave. Reject requires a comment.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/Decision" }
+      responses:
+        "200":
+          description: Decided
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LeaveRequest" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/leave-requests/{leave_id}/cancel:
+    parameters:
+      - $ref: "#/components/parameters/LeaveId"
+    post:
+      tags: [leave]
+      summary: Withdraw pending leave, or cancel approved leave before it starts (requester)
+      description: |
+        For approved leave: removed shifts are restored where still valid; each Mon–Fri day is refunded if
+        nothing was removed that day or everything was restored, otherwise it is *owed* until the person is
+        rostered that day again (forfeited once the date passes).
+      responses:
+        "200":
+          description: Cancelled
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LeaveRequestDetail" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+
+  # ---------------------------------------------------------------- roster (C7)
+  /api/roster:
+    get:
+      tags: [roster]
+      summary: Roster grid for a team (team manager or HR Admin)
+      parameters:
+        - { name: team_id, in: query, required: true, schema: { type: integer } }
+        - { name: start, in: query, required: true, schema: { type: string, format: date } }
+        - name: end
+          in: query
+          required: true
+          description: At most 42 days after `start`.
+          schema: { type: string, format: date }
+      responses:
+        "200":
+          description: Roster view
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RosterView" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/roster/assignments:
+    post:
+      tags: [roster]
+      summary: Put someone on a shift for a date (team manager or HR Admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AssignmentCreate" }
+      responses:
+        "201":
+          description: Assigned (may also refund an owed leave day)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Assignment" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: "`ROSTER_CONFLICT` — on leave, double-booked, shift not running that day, wrong team, inactive user"
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /api/roster/assignments/{assignment_id}:
+    parameters:
+      - { name: assignment_id, in: path, required: true, schema: { type: integer } }
+    delete:
+      tags: [roster]
+      summary: Remove someone from a shift (team manager or HR Admin; today or later only)
+      responses:
+        "204": { description: Removed (open swaps on it are cancelled) }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/roster/copy-week:
+    post:
+      tags: [roster]
+      summary: Copy the previous week's roster into the week starting `week_start` (a Monday)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [team_id, week_start]
+              properties:
+                team_id: { type: integer }
+                week_start: { type: string, format: date, description: Must be a Monday }
+      responses:
+        "200":
+          description: Result
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CopyWeekResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/roster/mine:
+    get:
+      tags: [roster]
+      summary: The caller's own shifts (default today + 27 days)
+      parameters:
+        - { name: start, in: query, schema: { type: string, format: date } }
+        - { name: end, in: query, schema: { type: string, format: date } }
+      responses:
+        "200":
+          description: Shifts
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/MyShift" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  # ---------------------------------------------------------------- swaps (C8)
+  /api/swaps:
+    get:
+      tags: [swaps]
+      summary: Swaps involving the caller (managers also see their team's; HR sees all)
+      responses:
+        "200":
+          description: Swaps, newest first
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/Swap" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      tags: [swaps]
+      summary: Propose a 1-for-1 exchange of your shift for a teammate's shift
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SwapCreate" }
+      responses:
+        "201":
+          description: Created (pending_peer); teammate notified
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Swap" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: "`SWAP_BLOCKED` (e.g. either person on approved/pending leave on either date), `TEAM_HAS_NO_MANAGER`, or a shift already in an open swap (`INVALID_STATE`)"
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /api/swaps/{swap_id}/respond:
+    parameters:
+      - $ref: "#/components/parameters/SwapId"
+    post:
+      tags: [swaps]
+      summary: Accept or decline (the teammate asked)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [accept]
+              properties: { accept: { type: boolean } }
+      responses:
+        "200":
+          description: Now pending_manager or declined
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Swap" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/swaps/{swap_id}/cancel:
+    parameters:
+      - $ref: "#/components/parameters/SwapId"
+    post:
+      tags: [swaps]
+      summary: Cancel an open swap (the requester)
+      responses:
+        "200":
+          description: Cancelled
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Swap" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/swaps/{swap_id}/decision:
+    parameters:
+      - $ref: "#/components/parameters/SwapId"
+    post:
+      tags: [swaps]
+      summary: Approve or reject (team manager; HR Admin if the manager is a party)
+      description: Approve re-validates and exchanges the two assignments. Reject requires a comment.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/Decision" }
+      responses:
+        "200":
+          description: Decided
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Swap" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+
+  # ---------------------------------------------------------------- views (C10)
+  /api/calendar:
+    get:
+      tags: [views]
+      summary: Unified calendar — leave + shift coverage for visible teams
+      description: HR Admins see all teams (or `team_id`); others only their own team.
+      parameters:
+        - { name: start, in: query, required: true, schema: { type: string, format: date } }
+        - name: end
+          in: query
+          required: true
+          description: At most 62 days including `start`.
+          schema: { type: string, format: date }
+        - { name: team_id, in: query, schema: { type: integer } }
+      responses:
+        "200":
+          description: Calendar view
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CalendarView" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/dashboard:
+    get:
+      tags: [views]
+      summary: Manager dashboard — pending approvals, coverage gaps, availability (manager or HR Admin)
+      responses:
+        "200":
+          description: Dashboard
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Dashboard" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  # ---------------------------------------------------------------- audit (C11)
+  /api/audit:
+    get:
+      tags: [audit]
+      summary: Audit log (HR Admin all; manager their team)
+      parameters:
+        - { name: actor_id, in: query, schema: { type: integer } }
+        - { name: entity_type, in: query, schema: { type: string } }
+        - { name: start, in: query, schema: { type: string, format: date } }
+        - { name: end, in: query, schema: { type: string, format: date } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 500, default: 100 } }
+        - { name: offset, in: query, schema: { type: integer, minimum: 0, default: 0 } }
+      responses:
+        "200":
+          description: Newest first
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuditPage" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  # ---------------------------------------------------------------- notifications (C12)
+  /api/notifications:
+    get:
+      tags: [notifications]
+      summary: The caller's notifications (newest 50) and unread count
+      parameters:
+        - { name: unread_only, in: query, schema: { type: boolean, default: false } }
+      responses:
+        "200":
+          description: Notifications
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/NotificationList" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/notifications/{notification_id}/read:
+    parameters:
+      - { name: notification_id, in: path, required: true, schema: { type: integer } }
+    post:
+      tags: [notifications]
+      summary: Mark one notification read (own only)
+      responses:
+        "204": { description: Marked read }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/notifications/read-all:
+    post:
+      tags: [notifications]
+      summary: Mark all the caller's notifications read
+      responses:
+        "204": { description: Marked read }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: lsm_token
+      description: JWT (HS256, 8 h) set by POST /api/auth/login.
+
+  parameters:
+    UserId: { name: user_id, in: path, required: true, schema: { type: integer } }
+    TeamId: { name: team_id, in: path, required: true, schema: { type: integer } }
+    LeaveId: { name: leave_id, in: path, required: true, schema: { type: integer } }
+    SwapId: { name: swap_id, in: path, required: true, schema: { type: integer } }
+
+  responses:
+    BadRequest:
+      description: "`VALIDATION_ERROR` — input breaks a rule"
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Unauthorized:
+      description: "`NOT_AUTHENTICATED` — missing/invalid/expired token, inactive user, or password changed"
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Forbidden:
+      description: "`FORBIDDEN` — role or ownership check failed"
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    NotFound:
+      description: "`NOT_FOUND`"
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Conflict:
+      description: "Conflicts with current state — see `code`"
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    UnprocessableEntity:
+      description: Malformed request body (FastAPI schema validation; FastAPI's default error shape)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail: { type: array, items: { type: object } }
+
+  schemas:
+    # ---------- common ----------
+    Error:
+      type: object
+      required: [detail, code, details]
+      properties:
+        detail: { type: string, description: Human-readable message }
+        code:
+          type: string
+          enum: [VALIDATION_ERROR, NOT_AUTHENTICATED, FORBIDDEN, NOT_FOUND, DUPLICATE, COVERAGE_VIOLATION,
+                 INSUFFICIENT_BALANCE, LEAVE_OVERLAP, TEAM_HAS_NO_MANAGER, ROSTER_CONFLICT, SWAP_BLOCKED,
+                 INVALID_STATE, LAST_HR_ADMIN]
+        details:
+          type: array
+          description: Extra structured data, e.g. CoverageViolation[] for COVERAGE_VIOLATION
+          items: {}
+    Role:
+      type: string
+      enum: [employee, manager, hr_admin]
+    Date:
+      type: string
+      format: date
+      examples: ["2026-11-02"]
+    Time:
+      type: string
+      pattern: "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+      examples: ["22:00"]
+    Timestamp:
+      type: string
+      format: date-time
+      examples: ["2026-10-28T10:15:00+05:30"]
+    Decision:
+      type: object
+      required: [approve]
+      properties:
+        approve: { type: boolean }
+        comment: { type: string, default: "", description: Required when approve is false }
+
+    # ---------- auth / users / teams ----------
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string }
+    Me:
+      type: object
+      required: [id, name, email, role, team_id, team_name, managed_team_id, today]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        email: { type: string, format: email }
+        role: { $ref: "#/components/schemas/Role" }
+        team_id: { type: [integer, "null"] }
+        team_name: { type: [string, "null"] }
+        managed_team_id: { type: [integer, "null"], description: The team this user manages, if any }
+        today: { $ref: "#/components/schemas/Date" }
+    User:
+      type: object
+      required: [id, name, email, role, team_id, team_name, join_date, active, created_at, deactivated_at]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        email: { type: string, format: email }
+        role: { $ref: "#/components/schemas/Role" }
+        team_id: { type: [integer, "null"] }
+        team_name: { type: [string, "null"] }
+        join_date: { $ref: "#/components/schemas/Date" }
+        active: { type: boolean }
+        created_at: { $ref: "#/components/schemas/Timestamp" }
+        deactivated_at: { type: [string, "null"], format: date-time }
+    UserCreate:
+      type: object
+      required: [name, email, role, password]
+      properties:
+        name: { type: string, minLength: 1 }
+        email: { type: string, format: email }
+        role: { $ref: "#/components/schemas/Role" }
+        team_id: { type: [integer, "null"], description: Required for employee/manager; must be null for hr_admin }
+        password: { type: string, minLength: 8, description: At most 72 bytes (bcrypt limit) }
+        join_date: { $ref: "#/components/schemas/Date", description: Defaults to today }
+    UserUpdate:
+      type: object
+      description: Only the fields sent are changed.
+      properties:
+        name: { type: string, minLength: 1 }
+        email: { type: string, format: email }
+        role: { $ref: "#/components/schemas/Role" }
+        team_id: { type: [integer, "null"] }
+        password: { type: string, minLength: 8 }
+    Team:
+      type: object
+      required: [id, name, department, manager_id, manager_name, member_count, created_at]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        department: { type: string }
+        manager_id: { type: [integer, "null"], description: Null = no manager; members can't submit leave or swaps }
+        manager_name: { type: [string, "null"] }
+        member_count: { type: integer, description: Active members }
+        created_at: { $ref: "#/components/schemas/Timestamp" }
+    TeamCreate:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string, minLength: 1 }
+        department: { type: string, default: "" }
+        manager_id: { type: [integer, "null"] }
+    TeamUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 1 }
+        department: { type: string }
+        manager_id: { type: [integer, "null"] }
+
+    # ---------- configuration ----------
+    LeaveType:
+      type: object
+      required: [id, name, annual_entitlement, carry_forward_cap, active]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        annual_entitlement: { type: number, minimum: 0, maximum: 366 }
+        carry_forward_cap: { type: number, minimum: 0 }
+        active: { type: boolean }
+    LeaveTypeCreate:
+      type: object
+      required: [name, annual_entitlement, carry_forward_cap]
+      properties:
+        name: { type: string, minLength: 1 }
+        annual_entitlement: { type: number, minimum: 0, maximum: 366 }
+        carry_forward_cap: { type: number, minimum: 0 }
+    LeaveTypeUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 1 }
+        annual_entitlement: { type: number, minimum: 0, maximum: 366 }
+        carry_forward_cap: { type: number, minimum: 0 }
+        active: { type: boolean }
+    DaysOfWeek:
+      type: array
+      description: 0 = Monday … 6 = Sunday
+      minItems: 1
+      uniqueItems: true
+      items: { type: integer, minimum: 0, maximum: 6 }
+    ShiftTemplate:
+      type: object
+      required: [id, team_id, team_name, name, start_time, end_time, days_of_week, min_headcount, active]
+      properties:
+        id: { type: integer }
+        team_id: { type: integer }
+        team_name: { type: string }
+        name: { type: string }
+        start_time: { $ref: "#/components/schemas/Time" }
+        end_time: { $ref: "#/components/schemas/Time", description: "≤ start_time means the shift ends the next day" }
+        days_of_week: { $ref: "#/components/schemas/DaysOfWeek" }
+        min_headcount: { type: integer, minimum: 0 }
+        active: { type: boolean }
+    ShiftTemplateCreate:
+      type: object
+      required: [team_id, name, start_time, end_time, days_of_week, min_headcount]
+      properties:
+        team_id: { type: integer }
+        name: { type: string, minLength: 1 }
+        start_time: { $ref: "#/components/schemas/Time" }
+        end_time: { $ref: "#/components/schemas/Time" }
+        days_of_week: { $ref: "#/components/schemas/DaysOfWeek" }
+        min_headcount: { type: integer, minimum: 0 }
+    ShiftTemplateUpdate:
+      type: object
+      description: team_id can't change.
+      properties:
+        name: { type: string, minLength: 1 }
+        start_time: { $ref: "#/components/schemas/Time" }
+        end_time: { $ref: "#/components/schemas/Time" }
+        days_of_week: { $ref: "#/components/schemas/DaysOfWeek" }
+        min_headcount: { type: integer, minimum: 0 }
+        active: { type: boolean }
+
+    # ---------- balances ----------
+    Balance:
+      type: object
+      required: [leave_type_id, leave_type, active, year, annual_entitlement, carry_forward_cap, accrued,
+                 carried_forward, adjustments, used, balance, pending, available]
+      properties:
+        leave_type_id: { type: integer }
+        leave_type: { type: string }
+        active: { type: boolean }
+        year: { type: integer }
+        annual_entitlement: { type: number }
+        carry_forward_cap: { type: number }
+        accrued: { type: number }
+        carried_forward: { type: number }
+        adjustments: { type: number }
+        used: { type: number, description: Days taken minus days refunded }
+        balance: { type: number, description: Sum of all ledger rows for the year }
+        pending: { type: number, description: Days in pending requests }
+        available: { type: number, description: balance − pending }
+    LedgerEntry:
+      type: object
+      required: [id, leave_type_id, leave_type, year, kind, amount, period, leave_request_id, reason,
+                 created_by_name, created_at]
+      properties:
+        id: { type: integer }
+        leave_type_id: { type: integer }
+        leave_type: { type: string }
+        year: { type: integer }
+        kind: { type: string, enum: [accrual, carry_forward, year_end_close, leave_taken, leave_refund, adjustment] }
+        amount: { type: number }
+        period: { type: [string, "null"] }
+        leave_request_id: { type: [integer, "null"] }
+        reason: { type: string }
+        created_by_name: { type: [string, "null"], description: Null = System }
+        created_at: { $ref: "#/components/schemas/Timestamp" }
+    BalanceAdjustment:
+      type: object
+      required: [user_id, leave_type_id, amount, reason]
+      properties:
+        user_id: { type: integer }
+        leave_type_id: { type: integer }
+        amount: { type: number, description: "Non-zero; + credit, − debit" }
+        reason: { type: string, minLength: 1 }
+        year: { type: integer, description: Defaults to the current year }
+
+    # ---------- leave ----------
+    LeaveStatus:
+      type: string
+      enum: [pending, approved, rejected, cancelled]
+    LeaveRequestCreate:
+      type: object
+      required: [leave_type_id, start_date, end_date]
+      properties:
+        leave_type_id: { type: integer }
+        start_date: { $ref: "#/components/schemas/Date" }
+        end_date: { $ref: "#/components/schemas/Date" }
+        reason: { type: string, default: "" }
+    LeaveRequest:
+      type: object
+      required: [id, user_id, user_name, team_id, leave_type_id, leave_type, start_date, end_date, days, reason,
+                 status, decided_by_name, decided_at, decision_comment, cancelled_at, created_at, can_cancel,
+                 can_decide]
+      properties:
+        id: { type: integer }
+        user_id: { type: integer }
+        user_name: { type: string }
+        team_id: { type: [integer, "null"] }
+        leave_type_id: { type: integer }
+        leave_type: { type: string }
+        start_date: { $ref: "#/components/schemas/Date" }
+        end_date: { $ref: "#/components/schemas/Date" }
+        days: { type: number, description: Mon–Fri days in the range }
+        reason: { type: string }
+        status: { $ref: "#/components/schemas/LeaveStatus" }
+        decided_by_name: { type: [string, "null"] }
+        decided_at: { type: [string, "null"], format: date-time }
+        decision_comment: { type: [string, "null"] }
+        cancelled_at: { type: [string, "null"], format: date-time }
+        created_at: { $ref: "#/components/schemas/Timestamp" }
+        can_cancel: { type: boolean, description: True for the requester when cancel is currently allowed }
+        can_decide: { type: boolean, description: True when the caller can approve/reject it now }
+    RemovedShift:
+      type: object
+      required: [id, shift_template_id, shift_name, date, status, note]
+      properties:
+        id: { type: integer }
+        shift_template_id: { type: integer }
+        shift_name: { type: string }
+        date: { $ref: "#/components/schemas/Date" }
+        status: { type: string, enum: [removed, restored, not_restored] }
+        note: { type: [string, "null"] }
+    RefundDay:
+      type: object
+      required: [date, shifts_removed, status, resolved_at]
+      properties:
+        date: { $ref: "#/components/schemas/Date" }
+        shifts_removed: { type: integer }
+        status: { type: string, enum: [refunded, owed, forfeited] }
+        resolved_at: { type: [string, "null"], format: date-time }
+    LeaveRequestDetail:
+      allOf:
+        - $ref: "#/components/schemas/LeaveRequest"
+        - type: object
+          required: [removed_shifts, refund_days]
+          properties:
+            removed_shifts: { type: array, items: { $ref: "#/components/schemas/RemovedShift" } }
+            refund_days: { type: array, items: { $ref: "#/components/schemas/RefundDay" } }
+    CoverageViolation:
+      type: object
+      required: [date, shift_template_id, shift_name, min_headcount, headcount_without_you]
+      properties:
+        date: { $ref: "#/components/schemas/Date" }
+        shift_template_id: { type: integer }
+        shift_name: { type: string }
+        min_headcount: { type: integer }
+        headcount_without_you: { type: integer }
+    LeavePreview:
+      type: object
+      required: [days, available, remaining_after, violations, errors]
+      properties:
+        days: { type: number }
+        available: { type: [number, "null"] }
+        remaining_after: { type: [number, "null"] }
+        violations: { type: array, items: { $ref: "#/components/schemas/CoverageViolation" } }
+        errors: { type: array, items: { type: string }, description: Empty = applying would succeed }
+
+    # ---------- roster & coverage ----------
+    AssignmentCreate:
+      type: object
+      required: [shift_template_id, user_id, date]
+      properties:
+        shift_template_id: { type: integer }
+        user_id: { type: integer }
+        date: { $ref: "#/components/schemas/Date" }
+    Assignment:
+      type: object
+      required: [id, user_id, user_name, shift_template_id, shift_name, team_id, date]
+      properties:
+        id: { type: integer }
+        user_id: { type: integer }
+        user_name: { type: string }
+        shift_template_id: { type: integer }
+        shift_name: { type: string }
+        team_id: { type: integer }
+        date: { $ref: "#/components/schemas/Date" }
+    MyShift:
+      type: object
+      required: [id, date, shift_template_id, shift_name, start_time, end_time, team_id, team_name]
+      properties:
+        id: { type: integer, description: Assignment id (use as my_assignment_id when proposing a swap) }
+        date: { $ref: "#/components/schemas/Date" }
+        shift_template_id: { type: integer }
+        shift_name: { type: string }
+        start_time: { $ref: "#/components/schemas/Time" }
+        end_time: { $ref: "#/components/schemas/Time" }
+        team_id: { type: integer }
+        team_name: { type: string }
+    CopyWeekResult:
+      type: object
+      required: [copied, skipped]
+      properties:
+        copied: { type: integer }
+        skipped: { type: array, items: { type: string }, description: Human-readable reasons }
+    CellPerson:
+      type: object
+      required: [assignment_id, user_id, user_name, leave_status]
+      properties:
+        assignment_id: { type: integer }
+        user_id: { type: integer }
+        user_name: { type: string }
+        leave_status: { type: ["string", "null"], enum: [pending, approved, null], description: Not counted in headcount when set }
+    CoverageCell:
+      type: object
+      required: [shift_template_id, shift_name, team_id, team_name, date, start_time, end_time, min_headcount,
+                 headcount, gap, assigned]
+      properties:
+        shift_template_id: { type: integer }
+        shift_name: { type: string }
+        team_id: { type: integer }
+        team_name: { type: string }
+        date: { $ref: "#/components/schemas/Date" }
+        start_time: { $ref: "#/components/schemas/Time" }
+        end_time: { $ref: "#/components/schemas/Time" }
+        min_headcount: { type: integer }
+        headcount: { type: integer, description: Assigned, active, not on approved/pending leave }
+        gap: { type: boolean, description: headcount < min_headcount }
+        assigned: { type: array, items: { $ref: "#/components/schemas/CellPerson" } }
+    Member:
+      type: object
+      required: [id, name, role, team_id]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        role: { $ref: "#/components/schemas/Role" }
+        team_id: { type: integer }
+    CalendarLeave:
+      type: object
+      required: [id, user_id, user_name, team_id, leave_type, start_date, end_date, days, status]
+      properties:
+        id: { type: integer }
+        user_id: { type: integer }
+        user_name: { type: string }
+        team_id: { type: integer }
+        leave_type: { type: string }
+        start_date: { $ref: "#/components/schemas/Date" }
+        end_date: { $ref: "#/components/schemas/Date" }
+        days: { type: number }
+        status: { type: string, enum: [pending, approved] }
+    RosterView:
+      type: object
+      required: [team, start, end, members, templates, leaves, cells]
+      properties:
+        team: { $ref: "#/components/schemas/Team" }
+        start: { $ref: "#/components/schemas/Date" }
+        end: { $ref: "#/components/schemas/Date" }
+        members: { type: array, items: { $ref: "#/components/schemas/Member" } }
+        templates: { type: array, items: { $ref: "#/components/schemas/ShiftTemplate" } }
+        leaves: { type: array, items: { $ref: "#/components/schemas/CalendarLeave" } }
+        cells: { type: array, items: { $ref: "#/components/schemas/CoverageCell" } }
+    CalendarView:
+      type: object
+      required: [start, end, teams, members, leaves, cells]
+      properties:
+        start: { $ref: "#/components/schemas/Date" }
+        end: { $ref: "#/components/schemas/Date" }
+        teams:
+          type: array
+          items:
+            type: object
+            required: [id, name, department]
+            properties:
+              id: { type: integer }
+              name: { type: string }
+              department: { type: string }
+        members: { type: array, items: { $ref: "#/components/schemas/Member" } }
+        leaves: { type: array, items: { $ref: "#/components/schemas/CalendarLeave" } }
+        cells: { type: array, items: { $ref: "#/components/schemas/CoverageCell" } }
+
+    # ---------- swaps ----------
+    SwapStatus:
+      type: string
+      enum: [pending_peer, pending_manager, approved, rejected, declined, cancelled]
+    SwapCreate:
+      type: object
+      required: [my_assignment_id, their_assignment_id]
+      properties:
+        my_assignment_id: { type: integer, description: The caller's own future shift }
+        their_assignment_id: { type: integer, description: A teammate's future shift }
+    Swap:
+      type: object
+      required: [id, team_id, team_name, requester_id, requester_name, target_id, target_name,
+                 requester_shift_name, requester_date, requester_start_time, requester_end_time,
+                 target_shift_name, target_date, target_start_time, target_end_time, status,
+                 decided_by_name, decision_comment, created_at, can_respond, can_cancel, can_decide]
+      properties:
+        id: { type: integer }
+        team_id: { type: integer }
+        team_name: { type: string }
+        requester_id: { type: integer }
+        requester_name: { type: string }
+        target_id: { type: integer }
+        target_name: { type: string }
+        requester_shift_name: { type: string, description: The shift the requester gives away }
+        requester_date: { $ref: "#/components/schemas/Date" }
+        requester_start_time: { $ref: "#/components/schemas/Time" }
+        requester_end_time: { $ref: "#/components/schemas/Time" }
+        target_shift_name: { type: string, description: The shift the requester takes over }
+        target_date: { $ref: "#/components/schemas/Date" }
+        target_start_time: { $ref: "#/components/schemas/Time" }
+        target_end_time: { $ref: "#/components/schemas/Time" }
+        status: { $ref: "#/components/schemas/SwapStatus" }
+        decided_by_name: { type: [string, "null"] }
+        decision_comment: { type: [string, "null"] }
+        created_at: { $ref: "#/components/schemas/Timestamp" }
+        can_respond: { type: boolean }
+        can_cancel: { type: boolean }
+        can_decide: { type: boolean }
+
+    # ---------- dashboard ----------
+    Availability:
+      type: object
+      required: [id, name, team_id, team_name, status, shifts, pending_leave_today]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        team_id: { type: integer }
+        team_name: { type: string }
+        status: { type: string, enum: [on_shift, on_leave, off] }
+        shifts: { type: array, items: { type: string }, description: 'e.g. "Morning 06:00-14:00"' }
+        pending_leave_today: { type: boolean }
+    Dashboard:
+      type: object
+      required: [today, teams, pending_leave, pending_swaps, gaps_today, upcoming_gaps, availability]
+      properties:
+        today: { $ref: "#/components/schemas/Date" }
+        teams:
+          type: array
+          items:
+            type: object
+            required: [id, name]
+            properties:
+              id: { type: integer }
+              name: { type: string }
+        pending_leave: { type: array, items: { $ref: "#/components/schemas/LeaveRequest" } }
+        pending_swaps: { type: array, items: { $ref: "#/components/schemas/Swap" } }
+        gaps_today: { type: array, items: { $ref: "#/components/schemas/CoverageCell" } }
+        upcoming_gaps: { type: array, items: { $ref: "#/components/schemas/CoverageCell" }, description: Next 7 days }
+        availability: { type: array, items: { $ref: "#/components/schemas/Availability" } }
+
+    # ---------- audit & notifications ----------
+    AuditEntry:
+      type: object
+      required: [id, actor_id, actor_name, action, entity_type, entity_id, team_id, before, after, created_at]
+      properties:
+        id: { type: integer }
+        actor_id: { type: [integer, "null"], description: Null = System }
+        actor_name: { type: string }
+        action: { type: string, examples: [leave.approve] }
+        entity_type: { type: string, examples: [leave_request] }
+        entity_id: { type: [integer, "null"] }
+        team_id: { type: [integer, "null"] }
+        before: { type: [object, "null"] }
+        after: { type: [object, "null"] }
+        created_at: { $ref: "#/components/schemas/Timestamp" }
+    AuditPage:
+      type: object
+      required: [entries, total]
+      properties:
+        entries: { type: array, items: { $ref: "#/components/schemas/AuditEntry" } }
+        total: { type: integer }
+    Notification:
+      type: object
+      required: [id, kind, message, link, read, created_at]
+      properties:
+        id: { type: integer }
+        kind: { type: string, enum: [approval, leave, swap, roster, coverage] }
+        message: { type: string }
+        link: { type: string, description: In-app route }
+        read: { type: boolean }
+        created_at: { $ref: "#/components/schemas/Timestamp" }
+    NotificationList:
+      type: object
+      required: [notifications, unread]
+      properties:
+        notifications: { type: array, items: { $ref: "#/components/schemas/Notification" } }
+        unread: { type: integer }
