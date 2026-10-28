@@ -24,12 +24,20 @@ A browser single-page app (React + TypeScript) talks JSON over HTTPS to a FastAP
 everything in one SQLite file. In production the backend also serves the built frontend, so it is a single
 process on a single port.
 
-```mermaid
+<!-- diagram: hld-system-overview -->
+![System overview: browser SPA, FastAPI backend, SQLite file](diagrams/hld-system-overview.png)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```text
 flowchart LR
   U[Employee / Manager / HR Admin<br/>web browser] -- HTTPS, JSON, JWT cookie --> API[FastAPI backend<br/>async, Python 3.13]
   API -- aiosqlite --> DB[(SQLite file<br/>app.db)]
   API -. serves built SPA in prod .-> U
 ```
+
+</details>
 
 Details: [Architecture](04-architecture.md).
 

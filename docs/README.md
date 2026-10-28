@@ -15,4 +15,13 @@ if code and docs disagree, fix one of them deliberately.
 
 Source requirement: *Leave & Shift Management System — Business Requirement Document* (Swapravo Sinha Roy).
 
-Diagrams are [Mermaid](https://mermaid.js.org/) blocks; GitHub renders them inline.
+## Diagrams
+Diagrams are PNG images in [`diagrams/`](diagrams/), embedded in the docs so they display anywhere (GitHub's
+built-in Mermaid rendering wasn't displaying them). Each image has its [Mermaid](https://mermaid.js.org/) source
+in a collapsible **Diagram source (Mermaid)** section directly below it — that source is the source of truth.
+
+To change a diagram, edit its source in the doc, then regenerate all images (needs Node.js and Chromium):
+
+```bash
+python docs/diagrams/render.py                      # or add: --puppeteer-config pp.json
+```

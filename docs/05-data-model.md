@@ -8,25 +8,36 @@ SQLite, one file. Conventions:
 
 ## 5.1 Entity-relationship diagram
 
-```mermaid
+<!-- diagram: data-er -->
+![Entity-relationship diagram of all tables](diagrams/data-er.png)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```text
 erDiagram
-  TEAMS ||--o{ USERS : "has members"
-  USERS |o--o| TEAMS : "manages (teams.manager_id)"
-  TEAMS ||--o{ SHIFT_TEMPLATES : defines
+  direction LR
+  TEAMS ||--o{ USERS : "members"
+  USERS |o--o| TEAMS : "manages"
+  TEAMS ||--o{ SHIFT_TEMPLATES : "defines"
   SHIFT_TEMPLATES ||--o{ SHIFT_ASSIGNMENTS : "rostered as"
-  USERS ||--o{ SHIFT_ASSIGNMENTS : works
-  USERS ||--o{ LEAVE_REQUESTS : requests
-  LEAVE_TYPES ||--o{ LEAVE_REQUESTS : "of type"
-  LEAVE_REQUESTS ||--o{ LEAVE_REMOVED_SHIFTS : "removed on approval"
-  LEAVE_REQUESTS ||--o{ LEAVE_REFUND_DAYS : "refund per day on cancel"
-  USERS ||--o{ BALANCE_LEDGER : "balance movements"
+  USERS ||--o{ SHIFT_ASSIGNMENTS : "works"
+  USERS ||--o{ LEAVE_REQUESTS : "requests"
+  LEAVE_TYPES ||--o{ LEAVE_REQUESTS : "type"
+  LEAVE_REQUESTS ||--o{ LEAVE_REMOVED_SHIFTS : "removed shifts"
+  LEAVE_REQUESTS ||--o{ LEAVE_REFUND_DAYS : "refund days"
+  USERS ||--o{ BALANCE_LEDGER : "movements"
   LEAVE_TYPES ||--o{ BALANCE_LEDGER : "per type"
-  LEAVE_REQUESTS |o--o{ BALANCE_LEDGER : "deduction / refund"
-  USERS ||--o{ SWAP_REQUESTS : "requester / target"
-  SHIFT_TEMPLATES ||--o{ SWAP_REQUESTS : "snapshot shifts"
-  USERS ||--o{ NOTIFICATIONS : receives
-  USERS |o--o{ AUDIT_LOG : "actor (null = System)"
+  LEAVE_REQUESTS |o--o{ BALANCE_LEDGER : "deduct / refund"
+  USERS ||--o{ SWAP_REQUESTS : "requester, target"
+  SHIFT_TEMPLATES ||--o{ SWAP_REQUESTS : "snapshots"
+  USERS ||--o{ NOTIFICATIONS : "receives"
+  USERS |o--o{ AUDIT_LOG : "actor"
 ```
+
+</details>
+
+`teams.manager_id` holds the "manages" link; a NULL audit actor means System.
 
 ## 5.2 Tables
 
@@ -218,7 +229,13 @@ Monthly credit for month *m* = round(E·m/12, 2) − round(E·(m−1)/12, 2), so
 
 ## 5.4 State machines
 
-```mermaid
+<!-- diagram: state-leave-request -->
+![State machine: leave request](diagrams/state-leave-request.png)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```text
 stateDiagram-v2
   direction LR
   state "Leave request" as L {
@@ -230,7 +247,15 @@ stateDiagram-v2
   }
 ```
 
-```mermaid
+</details>
+
+<!-- diagram: state-swap-request -->
+![State machine: swap request](diagrams/state-swap-request.png)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```text
 stateDiagram-v2
   direction LR
   state "Swap request" as S {
@@ -244,7 +269,15 @@ stateDiagram-v2
   }
 ```
 
-```mermaid
+</details>
+
+<!-- diagram: state-refund-day -->
+![State machine: refund day after cancelling approved leave](diagrams/state-refund-day.png)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```text
 stateDiagram-v2
   direction LR
   state "Refund day (after cancelling approved leave)" as R {
@@ -254,6 +287,8 @@ stateDiagram-v2
     owed --> forfeited: date passes first
   }
 ```
+
+</details>
 
 ## 5.5 Seed data (demo)
 1 HR Admin; 3 teams (Customer Support: Morning/Evening/Night 7 days; Network Operations: Day Mon–Fri + Weekend;

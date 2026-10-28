@@ -2,7 +2,13 @@
 
 ## 4.1 System context
 
-```mermaid
+<!-- diagram: arch-context -->
+![System context: employees, managers and HR Admins use the system; seed script loads data](diagrams/arch-context.png)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```text
 flowchart TB
   emp([Employee])
   mgr([Manager])
@@ -15,11 +21,19 @@ flowchart TB
   seed -. loads initial data .-> sys
 ```
 
+</details>
+
 No external systems: no payroll/HRIS, no email, no SSO.
 
 ## 4.2 Containers & deployment
 
-```mermaid
+<!-- diagram: arch-containers -->
+![Containers: React SPA in the browser, uvicorn process with FastAPI and static files, SQLite file](diagrams/arch-containers.png)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```text
 flowchart LR
   subgraph Browser
     SPA[React + TypeScript SPA]
@@ -34,6 +48,8 @@ flowchart LR
   API -- aiosqlite --> DB
 ```
 
+</details>
+
 | Mode | Processes | Notes |
 |---|---|---|
 | **Dev** | Vite dev server :5173 (HMR) + uvicorn :8000 `--reload` | Vite proxies `/api` → :8000, so the cookie is same-origin; no CORS needed. |
@@ -41,7 +57,13 @@ flowchart LR
 
 ## 4.3 Backend layers
 
-```mermaid
+<!-- diagram: arch-backend-layers -->
+![Backend layers: routers, services, platform (db, clock, errors), SQLite](diagrams/arch-backend-layers.png)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```text
 flowchart TB
   subgraph Routers["Routers (HTTP) — routers/*.py"]
     R[parse + validate with Pydantic<br/>auth dependency<br/>call one service function]
@@ -61,73 +83,92 @@ flowchart TB
   R -. handler .-> ERR
 ```
 
+</details>
+
 Rules: routers contain no SQL and no business rules; services never import FastAPI request objects; every write
 path appends to the audit log in the same transaction.
 
 ## 4.4 Backend components
 
-```mermaid
-flowchart LR
-  C1[C1 Identity & Access]
-  C2[C2 Org Admin]
-  C3[C3 Leave Type Config]
-  C4[C4 Shift Config]
-  C5[C5 Accrual & Balances]
-  C6[C6 Leave Requests]
-  C7[C7 Roster]
-  C8[C8 Swaps]
-  C9{{C9 Coverage Engine}}
-  C10[C10 Read Models<br/>calendar + dashboard]
-  subgraph Sinks["Shared sinks — written by every component that changes data"]
+<!-- diagram: arch-components -->
+![Backend components C1 to C12 and their dependencies](diagrams/arch-components.png)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```text
+flowchart TB
+  subgraph Entry["Entry points: config and read models"]
+    C1[C1 Identity & Access]
+    C2[C2 Org Admin]
+    C3[C3 Leave Type Config]
+    C4[C4 Shift Config]
+    C10[C10 Read Models<br/>calendar + dashboard]
+  end
+  subgraph Core["Core workflows"]
+    C6[C6 Leave Requests]
+    C7[C7 Roster]
+    C8[C8 Swaps]
+    C5[C5 Accrual & Balances]
+  end
+  subgraph Shared["Shared"]
+    C9{{C9 Coverage Engine}}
     C11[(C11 Audit Log)]
     C12[(C12 Notifications)]
   end
 
+  C1 -. current user .-> C2
   C2 --> C5 & C6 & C7 & C8
   C3 --> C5
   C4 --> C7
+  C10 --> C6 & C8 & C9
   C6 --> C5 & C7 & C9
   C7 --> C8 & C9
-  C7 -. owed-day refund hook .-> C6
+  C7 -. owed-day refund .-> C6
   C8 --> C7 & C9
-  C10 --> C6 & C8 & C9
-  C1 -. "current user + role for every request" .-> C2
 ```
 
+</details>
+
 C9 is the only place headcount and gaps are computed. C11 (C2–C8 write to it) and C12 (C2, C6, C7, C8 write to
-it) are write-only sinks, drawn without arrows to keep the graph readable.
+it) are write-only sinks, drawn without arrows to keep the graph readable. C1 reads users owned by C2 to resolve
+the current user and role on every request.
 
 ## 4.5 Frontend structure
 
-```mermaid
-flowchart TB
-  main[main.tsx] --> App[App.tsx — routes]
+<!-- diagram: arch-frontend -->
+![Frontend structure: shell, page groups by role, API client, shared UI and date helpers](diagrams/arch-frontend.png)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```text
+flowchart LR
+  main[main.tsx] --> App[App.tsx<br/>routes]
   App --> Auth[AuthProvider<br/>/auth/me, login, logout]
-  App --> Layout[Layout: role nav + bell]
-  Layout --> Pages
-  subgraph Pages
-    P1[Login]
-    P2[Dashboard]
-    P3[Approvals]
-    P4[My Leave]
-    P5[My Shifts & Swaps]
-    P6[Roster Builder]
-    P7[Calendar]
-    P8[Admin: Users / Teams / Leave Types + Accrual]
-    P9[Shift Templates]
-    P10[Audit Log]
-    P11[Notifications]
-  end
-  Pages --> API[api.ts — typed fetch client]
-  Pages --> UI[components/ — shared UI]
-  Pages --> Dates[dates.ts — IST date helpers]
+  App --> Layout[Layout<br/>role nav + bell]
+  Layout --> Login[Login]
+  Layout --> Emp[Everyone<br/>Calendar, Notifications]
+  Layout --> EM[Employee + Manager<br/>My Leave, My Shifts & Swaps]
+  Layout --> Mgr[Manager + HR<br/>Dashboard, Approvals,<br/>Roster Builder, Shift Templates, Audit Log]
+  Layout --> HR[HR Admin<br/>Users, Teams,<br/>Leave Types + Accrual]
+  Login & Emp & EM & Mgr & HR --> API[api.ts<br/>typed fetch client]
+  Emp & EM & Mgr & HR --> UI[components/ + dates.ts<br/>shared UI, IST date helpers]
   API -- same-origin fetch + cookie --> Backend[(FastAPI /api)]
 ```
+
+</details>
 
 ## 4.6 Key sequences
 
 ### Login and an authenticated request
-```mermaid
+<!-- diagram: seq-login -->
+![Sequence: login and an authenticated request](diagrams/seq-login.png)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```text
 sequenceDiagram
   participant B as Browser
   participant A as FastAPI
@@ -143,8 +184,16 @@ sequenceDiagram
   A-->>B: 200 dashboard (role from DB)
 ```
 
+</details>
+
 ### Apply for leave (coverage hard block)
-```mermaid
+<!-- diagram: seq-apply-leave -->
+![Sequence: apply for leave with the coverage hard block](diagrams/seq-apply-leave.png)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```text
 sequenceDiagram
   participant E as Employee
   participant A as API (C6)
@@ -166,8 +215,16 @@ sequenceDiagram
   end
 ```
 
+</details>
+
 ### Approve leave
-```mermaid
+<!-- diagram: seq-approve-leave -->
+![Sequence: approve leave](diagrams/seq-approve-leave.png)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```text
 sequenceDiagram
   participant M as Manager
   participant A as API (C6)
@@ -185,8 +242,16 @@ sequenceDiagram
   A-->>M: 200 LeaveRequest
 ```
 
+</details>
+
 ### Cancel approved leave (re-roster + per-day refund)
-```mermaid
+<!-- diagram: seq-cancel-approved-leave -->
+![Sequence: cancel approved leave with re-roster and per-day refund](diagrams/seq-cancel-approved-leave.png)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```text
 sequenceDiagram
   participant E as Employee
   participant A as API (C6)
@@ -214,8 +279,16 @@ sequenceDiagram
   Note over A,D: Later: manager rosters the person on an owed day →<br/>on_assignment_added → refund +1 (or forfeited once the date passes)
 ```
 
+</details>
+
 ### Shift swap
-```mermaid
+<!-- diagram: seq-swap -->
+![Sequence: shift swap propose, accept, approve](diagrams/seq-swap.png)
+
+<details>
+<summary>Diagram source (Mermaid)</summary>
+
+```text
 sequenceDiagram
   participant A as Employee A
   participant B as Employee B
@@ -231,6 +304,8 @@ sequenceDiagram
   S->>S: validate again, exchange user_id on both assignments
   S-->>M: 200 approved (A and B notified)
 ```
+
+</details>
 
 ## 4.7 Startup (lifespan)
 1. Open DB, run `schema.sql`, WAL mode, schema version.

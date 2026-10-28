@@ -24,7 +24,7 @@ Out of scope (BRD): payroll/HRIS integration (data is seeded), multi-level appro
 | Run mode | Dev: Vite (5173) proxies `/api` to uvicorn (8000). Prod/demo: FastAPI serves the built frontend on one port. |
 | Time zone | **IST only** (Asia/Kolkata) everywhere. |
 | Notifications | **In-app only** (bell + inbox, read/unread). |
-| Diagrams | Mermaid in Markdown. |
+| Diagrams | PNG images generated from Mermaid source; the source sits in a collapsible section under each image (`docs/diagrams/render.py` regenerates them). |
 
 ### Organisation & users
 | Topic | Decision |
