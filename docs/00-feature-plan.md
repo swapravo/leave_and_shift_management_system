@@ -16,7 +16,7 @@ Out of scope: see the explicit [Out of scope](#out-of-scope-explicit) list below
 ### Project & stack
 | Topic | Decision |
 |---|---|
-| Branch / layout | Session branch `claude/serene-gates-43tt2w`. Code in a new `app/` folder, design docs in `docs/`. Existing `content/` and `demo/` are never read or modified. |
+| Branch / layout | Session branch `claude/serene-gates-43tt2w`. Code in a new `app/` folder, design docs in `docs/`. Existing `content/` is never read or modified. The old `demo/` cold-open app was deleted ([D-007](decision-log.md)). |
 | Backend | Python **FastAPI**, **async** endpoints, **aiosqlite** (async wrapper around stdlib sqlite3). |
 | Database | **SQLite** (single file). |
 | Frontend | **React + TypeScript**, built with Node + Vite. |

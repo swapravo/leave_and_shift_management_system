@@ -5,6 +5,8 @@ SQLite, one file. Conventions:
 - Dates: `TEXT 'YYYY-MM-DD'` (IST calendar date). Times: `TEXT 'HH:MM'`. Timestamps: `TEXT` ISO-8601 with `+05:30`.
 - Booleans: `INTEGER` 0/1. Leave quantities: `REAL`, rounded to 2 decimals in code.
 - Nothing is hard-deleted except `shift_assignments` rows (an unassignment) — and every such delete is audited.
+- Implemented in [`app/backend/app/schema.sql`](../app/backend/app/schema.sql); see [5.6](#56-schema-file) for
+  what the file enforces beyond this page.
 
 ## 5.1 Entity-relationship diagram
 
@@ -297,3 +299,20 @@ Casual (6, cap 0); last year's accrual, some leave taken and the year-end close;
 weeks of roster; one approved and two pending upcoming leaves; one deliberate coverage gap today.
 All seeded users share the password `password123`. The seed is deterministic (same ids every run) and sets a
 fixed past `password_changed_at`, so the E2E reset endpoint can reload it without invalidating test logins.
+
+## 5.6 Schema file
+[`app/backend/app/schema.sql`](../app/backend/app/schema.sql) creates everything above. It is idempotent
+(`IF NOT EXISTS`), so it runs at every startup and again during the E2E reset. On top of the tables in 5.2 it:
+- uses **STRICT** tables, so a value of the wrong type is rejected instead of stored;
+- checks single-row rules with `CHECK`: valid dates and `HH:MM` times, the `days_of_week` format, lower-case email,
+  team NULL iff HR Admin, `deactivated_at` iff inactive, comment required on reject, decider required on
+  approve/reject, `cancelled_at` iff cancelled, the sign and `period` shape of each ledger kind, `leave_request_id`
+  only on leave movements, refund-day states (`refunded` ⇔ ledger row, `owed` ⇔ unresolved, never on a weekend);
+- adds unique rules: one `leave_taken` row per request; one removed-shift row per (request, shift, date); an
+  assignment in at most one **open** swap per side; `teams.manager_id` unique (a user manages at most one team);
+- leaves `swap_requests.*_assignment_id` **without** a foreign key (closed swaps may point at assignments that
+  were later unassigned; the snapshot columns keep the facts), and sets `leave_removed_shifts.restored_assignment_id`
+  to NULL if that assignment is later removed.
+
+Rules that need other rows (e.g. "the manager is an active manager of this team", no overlapping shifts) stay in the
+services.

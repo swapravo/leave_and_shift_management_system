@@ -133,3 +133,58 @@ turned down, for every change made to this repository.
   tag. The seed must stay deterministic.
 - **Affects:** `docs/06-testing-strategy.md`, `docs/02-low-level-design.md` (P5), `docs/openapi.yaml`,
   `docs/05-data-model.md`, `docs/03-technical-requirements.md`
+
+### D-007: Delete the cold-open demo app
+- **Date:** 2026-10-29
+- **Status:** Accepted
+- **Decided by:** Owner
+- **Context:** `demo/` held `cold-open-app/` (a Node app built from a vague one-paragraph prompt) plus two
+  documents about it (`demo/README.md`, `demo/cold-open-review.md`). It is not the app we are building, and
+  keeping a second, unrelated implementation of the same product on the branch invites confusion.
+- **Decision:** Remove the whole `demo/` folder: the app and the two documents that only describe it.
+- **Why:** The branch should hold one implementation, built from the docs. The two documents have no purpose without
+  the app they describe. Git history keeps all of it (`git show 28e7850:demo/README.md`).
+- **Alternatives considered:** Delete only `demo/cold-open-app/` and keep the README and review: leaves documents
+  that point at code that no longer exists.
+- **Consequences:** `content/day-1.md`, `content/day-2.md` and `content/build-plan.md` still mention the cold-open
+  app; `content/` is left untouched by the planning rules, so those references now point at history only.
+- **Affects:** `demo/` (deleted), `docs/00-feature-plan.md`
+
+### D-008: All source code under `app/`, backend package at `app/backend/app/`
+- **Date:** 2026-10-29
+- **Status:** Accepted
+- **Decided by:** Owner (a new folder for all source code); Claude, proposed (the exact layout)
+- **Context:** The owner asked for one folder to hold all source code. The docs disagreed on paths: the LLD named
+  `app/db.py` and `app/schema.sql`, while the TRD's run commands (`cd app/backend` … `uvicorn app.main:create_app`)
+  imply a Python package named `app` inside `app/backend/`.
+- **Decision:** `app/` is the source root, with `backend/`, `frontend/`, `e2e/` and `scripts/` under it. The Python
+  package is `app/backend/app/`. The LLD now says its paths are relative to `app/backend/` (and `app/frontend/`).
+  Subfolders are created when their build step starts, not as empty placeholders.
+- **Why:** Matches the run commands already in the TRD and the testing strategy, so only one sentence of the LLD had
+  to change. Keeping code out of the repo root keeps it separate from `docs/` and `content/`.
+- **Alternatives considered:** `src/` at the repo root: conflicts with every path already written in the docs.
+  Flattening the package to `app/backend/*.py`: breaks the `app.main` import path the TRD uses.
+- **Consequences:** Imports are `from app import db` etc., run from `app/backend/`.
+- **Affects:** `app/README.md`, `docs/02-low-level-design.md`
+
+### D-009: SQL schema with STRICT tables and CHECK constraints for single-row rules
+- **Date:** 2026-10-29
+- **Status:** Accepted
+- **Decided by:** Owner (write the schema first); Claude, proposed (STRICT, the extra constraints)
+- **Context:** First code artefact: `app/backend/app/schema.sql`, implementing the data model.
+- **Decision:** One idempotent file (`CREATE … IF NOT EXISTS`) with every table, index and the audit-log triggers.
+  Tables are `STRICT`. Every rule a single row can prove is a `CHECK` (see data model §5.6): date/time formats,
+  role ⇔ team, status ⇔ timestamps, ledger signs and period shapes, refund-day states. Extra unique indexes: one
+  `leave_taken` per request, one removed-shift row per (request, shift, date), an assignment in at most one open
+  swap per side. Swap assignment ids have no foreign key; `restored_assignment_id` is `ON DELETE SET NULL`.
+- **Why:** The database is the last line of defence: a service bug that writes a positive `leave_taken` or a
+  second deduction for the same request fails loudly instead of silently corrupting a balance. STRICT stops
+  SQLite's type affinity from storing `'1.5'` as text in a numeric column. The no-FK / SET NULL choices exist
+  because unassigning deletes `shift_assignments` rows, which closed swaps and restore records may still mention.
+- **Alternatives considered:** Plain tables with only the constraints listed in the data model: less protection,
+  same effort. Enforcing more cross-row rules with triggers (overlaps, manager validity): duplicates service logic
+  in a second language and makes errors harder to explain to the user.
+- **Consequences:** Needs SQLite ≥ 3.37 for STRICT (Python 3.13 here ships 3.45.1). Services must write values
+  that satisfy the CHECKs, e.g. `deactivated_at` together with `active = 0`. Checked by a throwaway script against
+  61 bad rows and a set of valid ones; the permanent pytest version comes with P1.
+- **Affects:** `app/backend/app/schema.sql`, `docs/05-data-model.md`

@@ -6,6 +6,9 @@ the request's DB connection; routers are thin (parse → call service → return
 
 Table names refer to the [data model](05-data-model.md); endpoints to the [API contract](openapi.yaml).
 
+File paths below are relative to `app/backend/` for the backend (the Python package is `app`, so P1 is
+`app/backend/app/db.py`) and to `app/frontend/` for the frontend.
+
 ## 2.0 Component map
 
 | ID | Component | Owns tables | Depends on |
