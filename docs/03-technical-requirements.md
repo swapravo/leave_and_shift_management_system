@@ -15,9 +15,9 @@
 | Backend tests | pytest + anyio plugin, FastAPI `TestClient` (httpx2) | pytest 9.1.1 |
 | Language (frontend) | TypeScript | 5.9.3 |
 | UI library | React | 19.3.1 |
-| Routing | React Router | 7.18.x |
+| Routing | React Router | 7.18.4 |
 | Build tool / dev server | Vite (+ @vitejs/plugin-react) | 8.3.5 |
-| Frontend tests | Vitest + Testing Library + jsdom | vitest 5.0.5 |
+| Frontend tests | Vitest + Testing Library + jsdom | vitest 5.0.5, jsdom 29.1.1 |
 | E2E tests | Playwright `@playwright/test` (matches the pre-installed Chromium build) | 1.63.0 |
 | Styling | Plain CSS with design tokens (CSS variables); no UI framework | — |
 | Runtime (frontend tooling) | Node.js | 22.x |

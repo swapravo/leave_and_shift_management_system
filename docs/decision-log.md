@@ -242,3 +242,34 @@ turned down, for every change made to this repository.
   with SQLITE_BUSY under concurrent use); per-router files on (10) (more files for no benefit at this size).
 - **Consequences:** Owner review needed like any *Claude, proposed* entry. Each item has a pytest test.
 - **Affects:** `app/backend/`, `docs/02-low-level-design.md`, `docs/03-technical-requirements.md`
+
+### D-012: Build the frontend; choices made while building it
+- **Date:** 2026-10-29
+- **Status:** Accepted
+- **Decided by:** Owner (build the frontend after the backend); Claude, proposed (the choices below)
+- **Context:** The frontend pages F0–F12 from the LLD, on the backend from D-010.
+- **Decision:**
+  1. **Versions:** React 19.3.1, TypeScript 5.9.3, Vite 8.3.5, Vitest 5.0.5, jsdom 29.1.1 as the TRD pins them;
+     React Router **7.18.4** (the TRD said 7.18.x; 7.18.5 was two days old, 7.18.4 six weeks).
+  2. **No UI library:** plain CSS with design tokens, light and dark via the OS setting, sidebar that becomes a menu
+     under 860 px; wide tables and the roster grid scroll inside their card, never the page.
+  3. **One data pattern:** `useLoad` for reads and `useAction` for writes; every server error is shown with the
+     backend's own message (`ApiError`); any 401 returns to the sign-in page.
+  4. **Leave form previews live** via `POST /leave-requests/preview` (250 ms after the last change) and disables
+     Submit while the server would refuse; the server still re-checks on submit.
+  5. **Swap picker** lists teammates' shifts from the team calendar (next 28 days) and hides shifts that have
+     started or are the very same shift; "started" uses the server's date and the IST time of day.
+  6. **HR's all-teams calendar** shows one line per team per day ("OK" / "n short") with the shift detail in a
+     tooltip; a single team shows one line per shift with headcount/minimum.
+  7. **Status is always text** (badges have a label; colour only reinforces it) and every field has a label, so
+     the Playwright suite can select by role and label.
+  8. **`app/scripts/test-all.sh`** runs pytest → typecheck → Vitest → build → Playwright, and says plainly that
+     the Playwright suite (`app/e2e/`) doesn't exist yet.
+- **Why:** Matches the TRD and LLD with the fewest moving parts; the rules stay on the server, the UI only explains
+  them.
+- **Alternatives considered:** A component library (faster to start, heavier, harder to keep accessible and
+  responsive our way); client-side duplication of the balance and coverage rules (would drift from the server).
+- **Consequences:** The Playwright E2E suite from the testing strategy is still to be written; until then the
+  frontend is covered by Vitest units, the type check and a manual browser run. All three BRD success criteria
+  were checked in Chromium against the seeded app (desktop and 390 px).
+- **Affects:** `app/frontend/`, `app/scripts/test-all.sh`, `app/README.md`, `docs/03-technical-requirements.md`
