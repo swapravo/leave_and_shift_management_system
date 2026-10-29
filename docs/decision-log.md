@@ -188,3 +188,57 @@ turned down, for every change made to this repository.
   that satisfy the CHECKs, e.g. `deactivated_at` together with `active = 0`. Checked by a throwaway script against
   61 bad rows and a set of valid ones; the permanent pytest version comes with P1.
 - **Affects:** `app/backend/app/schema.sql`, `docs/05-data-model.md`
+
+### D-010: Build the backend as designed, with the open review items left as the docs describe them
+- **Date:** 2026-10-29
+- **Status:** Accepted
+- **Decided by:** Owner (start building: backend first, then frontend); Claude, proposed (treating the open items
+  as below)
+- **Context:** The owner asked to build the backend and then the frontend. Three things were still waiting for the
+  owner's review: the 7 "decisions made while writing the docs", the weekend-shift question, and the *Proposed*
+  out-of-scope rows.
+- **Decision:** Implement every component P1–P5 and C1–C12 from the LLD, with pytest coverage per area. Where an
+  item is still open, the code does what the docs currently say: the 7 decisions as written; weekend shifts option
+  (a) (they're removed with the leave but not counted as leave days); the *Proposed* rows stay out of scope.
+- **Why:** The docs are the agreed source of truth; building to them keeps the code reviewable against them. Each
+  open item is a small, local change if the owner decides differently.
+- **Alternatives considered:** Waiting for every open item first: blocks the requested build on questions that
+  don't change the structure.
+- **Consequences:** The open items still need the owner's yes/no; a "no" gets a superseding entry and a code change.
+- **Affects:** `app/backend/`
+
+### D-011: Backend implementation choices the docs didn't settle
+- **Date:** 2026-10-29
+- **Status:** Accepted
+- **Decided by:** Claude, proposed
+- **Context:** Details that came up while writing the backend.
+- **Decision:**
+  1. **Read requests never write.** A past `owed` refund day is *reported* as `forfeited` on read and *stored* by
+     housekeeping (startup and before every refund check), instead of `balances()` writing it. Balances are
+     identical either way, since an owed day is still deducted.
+  2. **Security timestamps use the real clock** even when `LSM_TODAY` pins the date (token `iat`,
+     `password_changed_at`).
+  3. **Creating a leave type** catches accrual up for this year, like re-activating one does.
+  4. **Accrual never credits a closed year.** A manual year-end first completes that year's monthly accrual; only
+     past years can be closed and future months can't be accrued. A negative balance closes as 0 and carries 0.
+  5. **Approving leave that has already started** removes only shifts from today on (past roster is read-only).
+  6. **Coverage alerts** fire when a future cell *newly* falls below minimum, not again while it stays below.
+     Archiving a shift also tells the team manager (unless they did it), per review decision 4.
+  7. **GET /leave-types**: HR Admins see archived types only with `include_inactive=true` (the OpenAPI wording; the
+     LLD said "all to HR" — LLD updated).
+  8. **Write requests with a non-JSON body get 415**, the concrete form of the TRD's "JSON-only bodies" CSRF rule.
+  9. **Swapping two people on the very same shift** is rejected as pointless (400).
+  10. **One routes module** (`app/routers.py`) instead of a `routers/` package; request models carry types only and
+      services answer rule violations with 400, keeping 422 for malformed bodies.
+  11. **`LSM_BCRYPT_ROUNDS`** (default 12) so tests can hash with cost 4; **`httpx2`** is a dev dependency because
+      Starlette's `TestClient` requires it.
+  12. **`LAST_HR_ADMIN` is defensive only**: through the API the acting admin is always a second active HR Admin,
+      and self-demotion/self-deactivation are refused separately.
+  13. **Seed leave dates are chosen with the real coverage engine**, so seeded leave is exactly what the app would
+      accept; the only gap in the seeded weeks is the deliberate one today.
+- **Why:** Each keeps the rules in one place, avoids write locks on read paths, or makes the system testable
+  without changing behaviour users see.
+- **Alternatives considered:** Following the LLD literally on (1) (deferred read transactions that write can fail
+  with SQLITE_BUSY under concurrent use); per-router files on (10) (more files for no benefit at this size).
+- **Consequences:** Owner review needed like any *Claude, proposed* entry. Each item has a pytest test.
+- **Affects:** `app/backend/`, `docs/02-low-level-design.md`, `docs/03-technical-requirements.md`

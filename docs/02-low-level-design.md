@@ -2,7 +2,8 @@
 
 The app is broken into **platform pieces (P1–P4)**, **twelve backend components (C1–C12)** and a **frontend shell
 plus page groups (F0–F12)**. Each backend component owns its tables and exposes `async` service functions that take
-the request's DB connection; routers are thin (parse → call service → return).
+the request's DB connection; routers are thin (parse → call service → return). In the code all routes live in one
+module, `app/routers.py`, rather than one file per router.
 
 Table names refer to the [data model](05-data-model.md); endpoints to the [API contract](openapi.yaml).
 
@@ -135,8 +136,8 @@ releases their future shifts in the old team). Audit `team.create` / `team.updat
 ## C3 Leave Type Config — `services/leave_types.py`
 CRUD for name (unique), `annual_entitlement` (0–366), `carry_forward_cap` (≥ 0), `active`.
 Archiving: no new accrual or applications; balances/history remain; pending requests can still be decided.
-Re-activating triggers C5 `catch_up()` for the current year. `GET /leave-types` returns active types to
-employees/managers, all to HR. Audit `leave_type.create` / `.update`.
+Creating or re-activating a type triggers C5 `catch_up()` for the current year. `GET /leave-types` returns active
+types; HR Admins also get archived ones with `include_inactive=true`. Audit `leave_type.create` / `.update`.
 
 ## C4 Shift Config — `services/shift_templates.py`
 **Who**: HR Admin for any team; a manager for the team they manage.
@@ -226,7 +227,9 @@ including swaps): for each `owed` row of that user and date, if the user's assig
 `shifts_removed` → ledger `leave_refund` +1, row → `refunded`, notify employee. Audit `leave.refund_owed_day`.
 
 **Housekeeping — `expire_owed_days()`**: rows `owed` with `date < today` → `forfeited` (audit
-`leave.refund_forfeited`). Runs at startup and at the start of `on_assignment_added` and `balances`.
+`leave.refund_forfeited`). Runs at startup and at the start of `on_assignment_added`. Read endpoints never write:
+`GET /leave-requests/{id}` reports a past `owed` day as `forfeited` until housekeeping stores it (balances are the
+same either way, since an owed day is still deducted).
 
 **Lists**: `GET /leave-requests?scope=mine|pending|decided`; `GET /leave-requests/{id}` (with removed shifts and
 refund days; visible to requester, their approvers, HR).

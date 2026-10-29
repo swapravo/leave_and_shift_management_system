@@ -81,6 +81,11 @@ Rule: **no blocking call inside an `async def`** (no stdlib `sqlite3`, no `time.
 | `LSM_COOKIE_SECURE` | `0` | Set `1` behind HTTPS |
 | `LSM_TODAY` | *(unset)* | Pin "today" for demos and E2E runs (`YYYY-MM-DD`) |
 | `LSM_TEST_MODE` | `0` | `1` registers the test-only `POST /api/test/reset` endpoint (E2E only; never in prod) |
+| `LSM_BCRYPT_ROUNDS` | `12` | bcrypt cost; tests use 4 to stay fast |
+| `LSM_FRONTEND_DIST` | `app/frontend/dist` | Built SPA served on the API's port when present |
+
+`LSM_TODAY` pins the calendar date only. Security timestamps (token `iat`, `password_changed_at`) always use the
+real clock, so pinning a date can't invalidate or extend sign-ins.
 
 ## 3.8 Testing & quality gates
 Full detail in [Testing strategy](06-testing-strategy.md). Summary:
