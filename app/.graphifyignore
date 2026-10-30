@@ -1,0 +1,9 @@
+node_modules/
+.venv/
+dist/
+data/
+__pycache__/
+.pytest_cache/
+graphify-out/
+super_secret.text
+*.db

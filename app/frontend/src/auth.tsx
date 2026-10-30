@@ -63,8 +63,8 @@ export function useMe(): Me {
   return me;
 }
 
-export function homeFor(role: Role): string {
-  return role === "employee" ? "/leave" : "/dashboard";
+export function homeFor(_role: Role): string {
+  return "/home";
 }
 
 export function RequireRole({ roles, children }: { roles?: Role[]; children: ReactNode }) {

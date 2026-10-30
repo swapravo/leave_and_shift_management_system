@@ -88,6 +88,12 @@ export function formatRange(start: string, end: string, year?: number): string {
   return start === end ? formatDate(start, year) : `${formatDate(start, year)} – ${formatDate(end, year)}`;
 }
 
+/** "24 Jun": a birthday, without the year. */
+export function formatDayMonth(iso: string): string {
+  const [, m, d] = iso.split("-").map(Number);
+  return `${String(d).padStart(2, "0")} ${MONTHS[m - 1]}`;
+}
+
 export function monthLabel(iso: string): string {
   const [y, m] = iso.split("-").map(Number);
   return `${MONTHS_LONG[m - 1]} ${y}`;

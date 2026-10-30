@@ -32,8 +32,8 @@ export default function Login() {
           <span className="brand-mark" aria-hidden="true">L</span>
           <span>Leave &amp; Shifts</span>
         </div>
-        <h1>Sign in</h1>
-        <p className="muted">Leave, rosters and shift swaps in one place.</p>
+        <h1 className="welcome">Welcome back</h1>
+        <p className="muted">Sign in to see your shifts, leave and swaps.</p>
         <form onSubmit={submit} noValidate>
           <div className="field">
             <label htmlFor="email">Email</label>

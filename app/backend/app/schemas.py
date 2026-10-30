@@ -29,6 +29,7 @@ class UserCreate(Body):
     password: str
     team_id: int | None = None
     join_date: date | None = None
+    date_of_birth: date | None = None
 
 
 class UserUpdate(Body):
@@ -36,6 +37,7 @@ class UserUpdate(Body):
     email: str | None = None
     role: str | None = None
     team_id: int | None = None
+    date_of_birth: date | None = None
     password: str | None = None
 
 

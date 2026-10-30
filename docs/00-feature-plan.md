@@ -47,6 +47,7 @@ Out of scope: see the explicit [Out of scope](#out-of-scope-explicit) list below
 | Past dates | Leave **cannot start in the past**. |
 | Year boundary | A request **cannot span two calendar years**; submit one per year. |
 | Routing | Employee → their team manager. Manager → any HR Admin. Single approval only. |
+| Birthday leave | **A bonus Casual Leave day on the person's birthday**, booked automatically up to 30 days ahead. +1 Casual Leave is credited, then the day is taken, so it never uses their normal days. Approved with no approver; the person's shift that day comes off the roster and the manager gets the usual coverage notice if a shift is left short. A weekend birthday moves to the nearest working day (Fri / Mon); 29 Feb is 28 Feb in a common year. Already on leave that day → the +1 day is credited and nothing is booked. Once per birthday, even if cancelled. Needs HR to enter a date of birth and a leave type named "Casual Leave". |
 | Approval effect | Deduct balance; **take the person off every shift they were rostered on during the leave** (recorded so a cancellation can restore them); notify. |
 | Cancellation | Pending → withdrawn. Approved → only **before it starts**: shifts auto-restored and balance refunded per day (below). |
 

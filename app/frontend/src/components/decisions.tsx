@@ -1,9 +1,12 @@
-// Approve / reject controls shared by the dashboard and the approvals page.
-import { useState } from "react";
+// Leave and swap cards, and the approve / reject dialog, shared by Home and the Inbox.
+import { useState, type ReactNode } from "react";
+import { Check, X } from "lucide-react";
 import { api } from "../api";
-import { formatDate, formatDays, formatRange } from "../dates";
+import { formatDate, formatRange } from "../dates";
 import { useAction } from "../hooks";
+import { plural, swapSteps } from "../plain";
 import type { LeaveRequest, Swap } from "../types";
+import { Timeline } from "./Timeline";
 import { DecisionDialog, StatusBadge } from "./ui";
 
 type Pending = { kind: "leave"; item: LeaveRequest; approve: boolean } | { kind: "swap"; item: Swap; approve: boolean };
@@ -39,14 +42,29 @@ export function useDecisions(onDone: () => void) {
   return { open, dialog };
 }
 
-export function LeaveRow({ r, year, onDecide }: {
-  r: LeaveRequest; year: number; onDecide?: (approve: boolean) => void;
-}) {
+function DecideButtons({ subject, onDecide }: { subject: string; onDecide: (approve: boolean) => void }) {
   return (
-    <li>
+    <div className="row-actions">
+      <button type="button" className="primary" onClick={() => onDecide(true)} aria-label={`Approve ${subject}`}>
+        <Check size={18} aria-hidden="true" />Approve
+      </button>
+      <button type="button" onClick={() => onDecide(false)} aria-label={`Reject ${subject}`}>
+        <X size={18} aria-hidden="true" />Reject
+      </button>
+    </div>
+  );
+}
+
+export function LeaveCard({ r, year, onDecide, extra }: {
+  r: LeaveRequest; year: number; onDecide?: (approve: boolean) => void; extra?: ReactNode;
+}) {
+  const open = Boolean(onDecide && r.can_decide);
+  return (
+    <div className={`item-card${open ? " needs" : ""}`}>
       <div>
-        <div><strong>{r.user_name}</strong> · {r.leave_type} · {formatDays(r.days)} day{r.days === 1 ? "" : "s"}</div>
-        <div className="meta">{formatRange(r.start_date, r.end_date, year)}{r.reason ? ` — “${r.reason}”` : ""}</div>
+        <div className="title">{r.user_name} · {r.leave_type}</div>
+        <div className="meta">{formatRange(r.start_date, r.end_date, year)} · {plural(r.days, "day")}{r.reason ? ` · “${r.reason}”` : ""}</div>
+        {extra}
         {r.status !== "pending" && (
           <div className="meta">
             <StatusBadge status={r.status} /> {r.decided_by_name ? `by ${r.decided_by_name}` : ""}
@@ -54,46 +72,34 @@ export function LeaveRow({ r, year, onDecide }: {
           </div>
         )}
       </div>
-      {onDecide && r.can_decide && (
-        <div className="row-actions">
-          <button type="button" className="primary small" onClick={() => onDecide(true)}
-            aria-label={`Approve leave for ${r.user_name}`}>Approve</button>
-          <button type="button" className="small" onClick={() => onDecide(false)}
-            aria-label={`Reject leave for ${r.user_name}`}>Reject</button>
-        </div>
-      )}
-    </li>
+      {open && <DecideButtons subject={`leave for ${r.user_name}`} onDecide={onDecide!} />}
+    </div>
   );
 }
 
 export function SwapSummary({ s, year }: { s: Swap; year: number }) {
   return (
     <span>
-      <strong>{s.requester_name}</strong> gives {s.requester_shift_name} {formatDate(s.requester_date, year)}
-      {" "}({s.requester_start_time}–{s.requester_end_time}) ⇄ <strong>{s.target_name}</strong> gives{" "}
+      {s.requester_shift_name} {formatDate(s.requester_date, year)} ({s.requester_start_time}–{s.requester_end_time}) for{" "}
       {s.target_shift_name} {formatDate(s.target_date, year)} ({s.target_start_time}–{s.target_end_time})
     </span>
   );
 }
 
-export function SwapRow({ s, year, onDecide }: { s: Swap; year: number; onDecide?: (approve: boolean) => void }) {
+export function SwapCard({ s, meId, year, onDecide, actions }: {
+  s: Swap; meId: number; year: number; onDecide?: (approve: boolean) => void; actions?: ReactNode;
+}) {
+  const open = Boolean(onDecide && s.can_decide);
   return (
-    <li>
-      <div>
-        <div><SwapSummary s={s} year={year} /></div>
-        <div className="meta">
-          <StatusBadge status={s.status} /> {s.decided_by_name ? `by ${s.decided_by_name}` : ""}
-          {s.decision_comment ? ` — ${s.decision_comment}` : ""}
-        </div>
+    <div className={`item-card${open || (actions && s.can_respond) ? " needs" : ""}`}>
+      <div style={{ flex: "1 1 18rem" }}>
+        <div className="title">{s.requester_name} ⇄ {s.target_name}</div>
+        <div className="meta"><SwapSummary s={s} year={year} /></div>
+        {s.decision_comment && <div className="meta">“{s.decision_comment}”</div>}
+        <Timeline steps={swapSteps(s, meId)} label={`Progress of the swap between ${s.requester_name} and ${s.target_name}`} />
       </div>
-      {onDecide && s.can_decide && (
-        <div className="row-actions">
-          <button type="button" className="primary small" onClick={() => onDecide(true)}
-            aria-label={`Approve swap between ${s.requester_name} and ${s.target_name}`}>Approve</button>
-          <button type="button" className="small" onClick={() => onDecide(false)}
-            aria-label={`Reject swap between ${s.requester_name} and ${s.target_name}`}>Reject</button>
-        </div>
-      )}
-    </li>
+      {open && <DecideButtons subject={`swap between ${s.requester_name} and ${s.target_name}`} onDecide={onDecide!} />}
+      {actions}
+    </div>
   );
 }

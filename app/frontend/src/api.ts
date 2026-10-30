@@ -103,9 +103,11 @@ export const api = {
   me: () => get<Me>("/auth/me"),
   // users & teams
   users: (q: { include_inactive?: boolean; team_id?: number } = {}) => get<User[]>("/users", q),
-  createUser: (b: { name: string; email: string; role: Role; team_id: number | null; password: string; join_date?: string }) =>
+  createUser: (b: { name: string; email: string; role: Role; team_id: number | null; password: string; join_date?: string;
+    date_of_birth?: string }) =>
     post<User>("/users", b),
-  updateUser: (id: number, b: Partial<{ name: string; email: string; role: Role; team_id: number | null; password: string }>) =>
+  updateUser: (id: number, b: Partial<{ name: string; email: string; role: Role; team_id: number | null; password: string;
+    date_of_birth: string | null }>) =>
     patch<User>(`/users/${id}`, b),
   deactivateUser: (id: number) => del<User>(`/users/${id}`),
   teams: () => get<Team[]>("/teams"),

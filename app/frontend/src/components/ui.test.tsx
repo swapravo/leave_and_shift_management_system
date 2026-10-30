@@ -58,24 +58,23 @@ describe("DecisionDialog", () => {
 });
 
 describe("navigation by role", () => {
-  const labels = (role: "employee" | "manager" | "hr_admin") => navFor(role).flatMap((g) => g.items.map((i) => i.label));
+  const labels = (role: "employee" | "manager" | "hr_admin") => navFor(role).map((i) => i.label);
 
-  it("shows employees only their own pages", () => {
-    expect(labels("employee")).toEqual(["My leave", "My shifts & swaps", "Team calendar", "Notifications"]);
+  it("gives employees four places", () => {
+    expect(labels("employee")).toEqual(["Home", "Calendar", "Requests", "Inbox"]);
   });
 
-  it("gives managers the manage pages but not admin", () => {
-    const m = labels("manager");
-    expect(m).toContain("Roster builder");
-    expect(m).toContain("My leave");
-    expect(m).not.toContain("Users");
+  it("adds the roster for managers and keeps them to five", () => {
+    expect(labels("manager")).toEqual(["Home", "Calendar", "Requests", "Roster", "Inbox"]);
   });
 
-  it("gives HR admin pages but no personal leave", () => {
+  it("gives HR settings and the roster but no personal requests", () => {
     const h = labels("hr_admin");
-    expect(h).toContain("Users");
-    expect(h).toContain("Leave types & accrual");
-    expect(h).not.toContain("My leave");
-    expect(h).not.toContain("My shifts & swaps");
+    expect(h).toEqual(["Home", "Calendar", "Roster", "Inbox", "Settings"]);
+    expect(h).not.toContain("Requests");
+  });
+
+  it("never needs more tabs than fit on a phone", () => {
+    for (const role of ["employee", "manager", "hr_admin"] as const) expect(navFor(role).length).toBeLessThanOrEqual(5);
   });
 });

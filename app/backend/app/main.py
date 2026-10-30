@@ -1,5 +1,7 @@
 """FastAPI app factory: `uvicorn app.main:create_app --factory` (run from app/backend)."""
 
+import asyncio
+import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -10,9 +12,11 @@ from fastapi.staticfiles import StaticFiles
 from . import auth, clock, db, errors
 from .config import Settings, load_settings
 from .routers import api, test_api
-from .services import accrual, leave
+from .services import accrual, birthday, leave
 
 _WRITE_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
+_log = logging.getLogger("lsm")
+_HOUSEKEEPING_SECONDS = 3600
 
 
 async def startup(settings: Settings) -> None:
@@ -23,9 +27,21 @@ async def startup(settings: Settings) -> None:
         await conn.execute("BEGIN IMMEDIATE")
         await leave.expire_owed_days(conn)
         await accrual.catch_up(conn)
+        await birthday.run(conn)
         await conn.commit()
     finally:
         await conn.close()
+
+
+async def _housekeeping() -> None:
+    """Birthdays keep arriving while the server stays up, so look again every hour (idempotent)."""
+    while True:
+        await asyncio.sleep(_HOUSEKEEPING_SECONDS)
+        try:
+            async with db.transaction(write=True) as conn:
+                await birthday.run(conn)
+        except Exception:  # keep the loop alive; the next hour tries again
+            _log.exception("Birthday housekeeping failed")
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -37,7 +53,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @asynccontextmanager
     async def lifespan(_: FastAPI):
         await startup(settings)
-        yield
+        task = asyncio.create_task(_housekeeping())
+        try:
+            yield
+        finally:
+            task.cancel()
 
     app = FastAPI(title="Leave & Shift Management System API", version="0.1.0", lifespan=lifespan)
     errors.install(app)

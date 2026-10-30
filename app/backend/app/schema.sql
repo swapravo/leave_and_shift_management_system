@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS schema_meta (
     value TEXT NOT NULL
 ) STRICT;
 
-INSERT OR IGNORE INTO schema_meta (key, value) VALUES ('schema_version', '1');
+INSERT OR IGNORE INTO schema_meta (key, value) VALUES ('schema_version', '2');   -- 2: birthday leave (db.upgrade)
 
 -- ---------------------------------------------------------------------------------------------------------------
 -- teams  (C2). Flat: department is only a label. manager_id NULL = no manager -> members can't submit leave/swaps.
@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS users (
     role                TEXT    NOT NULL CHECK (role IN ('employee', 'manager', 'hr_admin')),
     team_id             INTEGER REFERENCES teams (id),
     join_date           TEXT    NOT NULL CHECK (date(join_date) IS join_date),          -- accrual starts this month
+    date_of_birth       TEXT    CHECK (date_of_birth IS NULL OR date(date_of_birth) IS date_of_birth),  -- birthday leave
     active              INTEGER NOT NULL DEFAULT 1 CHECK (active IN (0, 1)),
     password_changed_at TEXT    NOT NULL,                                               -- older JWTs are rejected
     created_at          TEXT    NOT NULL,
@@ -133,13 +134,29 @@ CREATE TABLE IF NOT EXISTS leave_requests (
     created_at       TEXT    NOT NULL,
     CHECK (end_date >= start_date),
     CHECK (substr(start_date, 1, 4) = substr(end_date, 1, 4)),                 -- one calendar year per request
-    CHECK (status NOT IN ('approved', 'rejected') OR (decided_by IS NOT NULL AND decided_at IS NOT NULL)),
+    CHECK (status NOT IN ('approved', 'rejected') OR decided_at IS NOT NULL),
+    CHECK (status <> 'rejected' OR decided_by IS NOT NULL),
+    -- Only the system's birthday grant is approved without a human approver (decided_by NULL).
+    CHECK (status <> 'approved' OR decided_by IS NOT NULL OR reason = 'Birthday leave'),
     CHECK (status <> 'rejected' OR length(trim(coalesce(decision_comment, ''))) > 0),
     CHECK ((status = 'cancelled') = (cancelled_at IS NOT NULL))
 ) STRICT;
 
 CREATE INDEX IF NOT EXISTS ix_leave_user_status ON leave_requests (user_id, status);
 CREATE INDEX IF NOT EXISTS ix_leave_dates       ON leave_requests (start_date, end_date);
+
+-- ---------------------------------------------------------------------------------------------------------------
+-- birthday_grants  (C6). One row per person per birthday year, so the grant runs at most once even if the leave it
+-- created is cancelled later. year = the calendar year of the birthday itself. leave_request_id is NULL when the day
+-- was only credited (they were already on leave that day).
+-- ---------------------------------------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS birthday_grants (
+    user_id          INTEGER NOT NULL REFERENCES users (id),
+    year             INTEGER NOT NULL CHECK (year BETWEEN 2000 AND 2100),
+    leave_request_id INTEGER UNIQUE REFERENCES leave_requests (id),
+    created_at       TEXT    NOT NULL,
+    PRIMARY KEY (user_id, year)
+) STRICT;
 
 -- ---------------------------------------------------------------------------------------------------------------
 -- leave_removed_shifts  (C6). Shifts taken away when leave was approved, so a cancellation can restore them.

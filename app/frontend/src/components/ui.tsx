@@ -1,13 +1,18 @@
-import { useEffect, useId, useRef, type ReactNode } from "react";
+import { X } from "lucide-react";
+import { createContext, useContext, useEffect, useId, useRef, type ReactNode } from "react";
 import type { ApiError } from "../api";
 import { formatDate } from "../dates";
 import type { CoverageViolation } from "../types";
 
+/** Pages shown inside another page (the settings tabs) get an h2, so each screen keeps a single h1. */
+export const NestedPage = createContext(false);
+
 export function PageHeader({ title, subtitle, actions }: { title: string; subtitle?: ReactNode; actions?: ReactNode }) {
+  const Heading = useContext(NestedPage) ? "h2" : "h1";
   return (
     <header className="page-header">
       <div>
-        <h1>{title}</h1>
+        <Heading>{title}</Heading>
         {subtitle && <p className="muted">{subtitle}</p>}
       </div>
       {actions && <div className="page-actions">{actions}</div>}
@@ -105,8 +110,8 @@ export function Empty({ children }: { children: ReactNode }) {
   return <p className="empty">{children}</p>;
 }
 
-export function Modal({ title, onClose, children, footer }: {
-  title: string; onClose: () => void; children: ReactNode; footer?: ReactNode;
+export function Modal({ title, onClose, children, footer, wide }: {
+  title: string; onClose: () => void; children: ReactNode; footer?: ReactNode; wide?: boolean;
 }) {
   const id = useId();
   const ref = useRef<HTMLDivElement>(null);
@@ -125,10 +130,10 @@ export function Modal({ title, onClose, children, footer }: {
   }, [onClose]);
   return (
     <div className="modal-backdrop" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal" role="dialog" aria-modal="true" aria-labelledby={id} ref={ref}>
+      <div className={`modal${wide ? " wide" : ""}`} role="dialog" aria-modal="true" aria-labelledby={id} ref={ref}>
         <div className="modal-head">
           <h2 id={id}>{title}</h2>
-          <button type="button" className="modal-close ghost" aria-label="Close" onClick={onClose}>×</button>
+          <button type="button" className="modal-close ghost" aria-label="Close" onClick={onClose}><X size={22} aria-hidden="true" /></button>
         </div>
         <div className="modal-body">{children}</div>
         {footer && <div className="modal-foot">{footer}</div>}

@@ -71,6 +71,7 @@ this team; a user manages at most one team.
 | role | TEXT | NOT NULL, CHECK IN (`employee`, `manager`, `hr_admin`) |
 | team_id | INTEGER | FK → teams.id; CHECK: NULL iff role = `hr_admin` |
 | join_date | TEXT | NOT NULL; accrual starts in this month |
+| date_of_birth | TEXT | NULL; a valid date. Drives the birthday leave day (see `birthday_grants`) |
 | active | INTEGER | NOT NULL DEFAULT 1; 0 = deactivated (soft delete) |
 | password_changed_at | TEXT | NOT NULL; JWTs issued before this are rejected |
 | created_at | TEXT | NOT NULL |
@@ -120,13 +121,26 @@ A swap changes `user_id` on two rows in place.
 | days | REAL | NOT NULL — Mon–Fri days in range, fixed at submission |
 | reason | TEXT | NOT NULL DEFAULT '' |
 | status | TEXT | CHECK IN (`pending`, `approved`, `rejected`, `cancelled`) |
-| decided_by | INTEGER | FK → users.id |
-| decided_at | TEXT | |
+| decided_by | INTEGER | FK → users.id. Required when approved, except the system's birthday grant (below), which has none |
+| decided_at | TEXT | required when approved or rejected |
 | decision_comment | TEXT | required when rejected |
 | cancelled_at | TEXT | |
 | created_at | TEXT | NOT NULL |
 
 Index: (user_id, status), (start_date, end_date).
+
+CHECK: an `approved` request has `decided_by` unless `reason = 'Birthday leave'`, the only leave the system approves
+itself.
+
+### `birthday_grants` — one row per person per birthday year
+| Column | Type | Constraints / notes |
+|---|---|---|
+| user_id | INTEGER | NOT NULL FK → users.id |
+| year | INTEGER | NOT NULL; the calendar year of the birthday. PK (user_id, year) |
+| leave_request_id | INTEGER | UNIQUE FK → leave_requests.id; NULL when the day was only credited (already on leave) |
+| created_at | TEXT | NOT NULL |
+
+Makes the birthday grant run once per birthday, even if the person later cancels the leave it booked.
 
 ### `leave_removed_shifts` — shifts taken away when leave was approved
 | Column | Type | Constraints / notes |

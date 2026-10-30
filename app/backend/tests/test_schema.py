@@ -13,7 +13,7 @@ def test_schema_constraints():
     db.execute("PRAGMA foreign_keys = ON")
     db.executescript(sql)
     db.executescript(sql)  # idempotent
-    assert db.execute("SELECT value FROM schema_meta").fetchall() == [("1",)]
+    assert db.execute("SELECT value FROM schema_meta").fetchall() == [("2",)]
     fails = []
 
 

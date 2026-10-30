@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { api } from "../api";
 import { useMe } from "../auth";
 import { Card, ConfirmDialog, Empty, ErrorBox, Field, Loading, Modal, Notice, PageHeader, StatusBadge, TableWrap } from "../components/ui";
-import { formatDate } from "../dates";
+import { formatDate, formatDayMonth } from "../dates";
 import { useAction, useLoad } from "../hooks";
 import type { Role, Team, User } from "../types";
 
@@ -12,8 +12,8 @@ const ROLES: { value: Role; label: string }[] = [
   { value: "hr_admin", label: "HR Admin" },
 ];
 
-function UserDialog({ user, teams, isSelf, onClose, onSaved }: {
-  user: User | null; teams: Team[]; isSelf: boolean; onClose: () => void; onSaved: (u: User, created: boolean) => void;
+function UserDialog({ user, teams, isSelf, today, onClose, onSaved }: {
+  user: User | null; teams: Team[]; isSelf: boolean; today: string; onClose: () => void; onSaved: (u: User, created: boolean) => void;
 }) {
   const [name, setName] = useState(user?.name ?? "");
   const [email, setEmail] = useState(user?.email ?? "");
@@ -21,6 +21,7 @@ function UserDialog({ user, teams, isSelf, onClose, onSaved }: {
   const [teamId, setTeamId] = useState<number | "">(user?.team_id ?? teams[0]?.id ?? "");
   const [password, setPassword] = useState("");
   const [joinDate, setJoinDate] = useState("");
+  const [born, setBorn] = useState(user?.date_of_birth ?? "");
   const { busy, error, run } = useAction();
 
   async function submit(e: FormEvent) {
@@ -32,9 +33,13 @@ function UserDialog({ user, teams, isSelf, onClose, onSaved }: {
         const changes: Parameters<typeof api.updateUser>[1] = { name, email, team_id };
         if (role !== user.role) changes.role = role;
         if (password) changes.password = password;
+        if (role !== "hr_admin" && born !== (user.date_of_birth ?? "")) changes.date_of_birth = born || null;
         saved = await api.updateUser(user.id, changes);
       } else {
-        saved = await api.createUser({ name, email, role, team_id, password, ...(joinDate ? { join_date: joinDate } : {}) });
+        saved = await api.createUser({
+          name, email, role, team_id, password, ...(joinDate ? { join_date: joinDate } : {}),
+          ...(born && role !== "hr_admin" ? { date_of_birth: born } : {}),
+        });
       }
     });
     if (ok && saved) onSaved(saved, !user);
@@ -59,6 +64,11 @@ function UserDialog({ user, teams, isSelf, onClose, onSaved }: {
             </select>
           </Field>
         </div>
+        {role !== "hr_admin" && (
+          <Field label="Date of birth" htmlFor="u-born" hint="They get a bonus Casual Leave day on their birthday. Only HR can see this.">
+            <input id="u-born" type="date" value={born} max={today} onChange={(e) => setBorn(e.target.value)} />
+          </Field>
+        )}
         {!user && (
           <Field label="Join date" htmlFor="u-join" hint="Accrual starts in this month. Defaults to today.">
             <input id="u-join" type="date" value={joinDate} onChange={(e) => setJoinDate(e.target.value)} />
@@ -116,7 +126,7 @@ export default function Users() {
         {!users.data ? <Loading /> : users.data.length === 0 ? <Empty>No users match.</Empty> : (
           <TableWrap label="Users">
             <table>
-              <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Team</th><th>Joined</th><th>Status</th><th><span className="sr-only">Actions</span></th></tr></thead>
+              <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Team</th><th>Joined</th><th>Birthday</th><th>Status</th><th><span className="sr-only">Actions</span></th></tr></thead>
               <tbody>
                 {users.data.map((u) => (
                   <tr key={u.id}>
@@ -125,6 +135,7 @@ export default function Users() {
                     <td>{ROLES.find((r) => r.value === u.role)?.label}</td>
                     <td>{u.team_name ?? "—"}</td>
                     <td className="nowrap">{formatDate(u.join_date, year)}</td>
+                    <td className="nowrap">{u.date_of_birth ? formatDayMonth(u.date_of_birth) : "—"}</td>
                     <td><StatusBadge status={u.active ? "active" : "inactive"} /></td>
                     <td className="actions">
                       {u.active && (
@@ -149,6 +160,7 @@ export default function Users() {
           user={editing === "new" ? null : editing}
           teams={teams.data}
           isSelf={editing !== "new" && editing.id === me.id}
+          today={me.today}
           onClose={() => setEditing(null)}
           onSaved={(u, created) => {
             setEditing(null);

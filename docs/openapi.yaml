@@ -988,7 +988,7 @@ components:
         today: { $ref: "#/components/schemas/Date" }
     User:
       type: object
-      required: [id, name, email, role, team_id, team_name, join_date, active, created_at, deactivated_at]
+      required: [id, name, email, role, team_id, team_name, join_date, date_of_birth, active, created_at, deactivated_at]
       properties:
         id: { type: integer }
         name: { type: string }
@@ -997,6 +997,7 @@ components:
         team_id: { type: [integer, "null"] }
         team_name: { type: [string, "null"] }
         join_date: { $ref: "#/components/schemas/Date" }
+        date_of_birth: { oneOf: [{ $ref: "#/components/schemas/Date" }, { type: "null" }], description: "HR only. Drives the birthday Casual Leave day; null = none" }
         active: { type: boolean }
         created_at: { $ref: "#/components/schemas/Timestamp" }
         deactivated_at: { type: [string, "null"], format: date-time }
@@ -1010,6 +1011,7 @@ components:
         team_id: { type: [integer, "null"], description: Required for employee/manager; must be null for hr_admin }
         password: { type: string, minLength: 8, description: At most 72 bytes (bcrypt limit) }
         join_date: { $ref: "#/components/schemas/Date", description: Defaults to today }
+        date_of_birth: { $ref: "#/components/schemas/Date", description: "Optional, in the past. Not for hr_admin (they take no leave)" }
     UserUpdate:
       type: object
       description: Only the fields sent are changed.
@@ -1019,6 +1021,7 @@ components:
         role: { $ref: "#/components/schemas/Role" }
         team_id: { type: [integer, "null"] }
         password: { type: string, minLength: 8 }
+        date_of_birth: { oneOf: [{ $ref: "#/components/schemas/Date" }, { type: "null" }], description: "Null clears it" }
     Team:
       type: object
       required: [id, name, department, manager_id, manager_name, member_count, created_at]

@@ -1,50 +1,37 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type ComponentType } from "react";
+import { CalendarDays, ClipboardList, House, Inbox, LayoutGrid, LogOut, Settings, type LucideProps } from "lucide-react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router";
 import { api } from "../api";
 import { useAuth, useMe } from "../auth";
-import { formatDate } from "../dates";
 import type { Role } from "../types";
 
-interface NavItem {
+export interface NavItem {
   to: string;
   label: string;
+  icon: ComponentType<LucideProps>;
   roles: Role[];
 }
 
-const GROUPS: { title: string; items: NavItem[] }[] = [
-  {
-    title: "My work",
-    items: [
-      { to: "/dashboard", label: "Dashboard", roles: ["manager", "hr_admin"] },
-      { to: "/leave", label: "My leave", roles: ["employee", "manager"] },
-      { to: "/shifts", label: "My shifts & swaps", roles: ["employee", "manager"] },
-      { to: "/calendar", label: "Team calendar", roles: ["employee", "manager", "hr_admin"] },
-      { to: "/notifications", label: "Notifications", roles: ["employee", "manager", "hr_admin"] },
-    ],
-  },
-  {
-    title: "Manage",
-    items: [
-      { to: "/approvals", label: "Approvals", roles: ["manager", "hr_admin"] },
-      { to: "/roster", label: "Roster builder", roles: ["manager", "hr_admin"] },
-      { to: "/shift-templates", label: "Shift templates", roles: ["manager", "hr_admin"] },
-      { to: "/audit", label: "Audit log", roles: ["manager", "hr_admin"] },
-    ],
-  },
-  {
-    title: "Admin",
-    items: [
-      { to: "/admin/users", label: "Users", roles: ["hr_admin"] },
-      { to: "/admin/teams", label: "Teams", roles: ["hr_admin"] },
-      { to: "/admin/leave-types", label: "Leave types & accrual", roles: ["hr_admin"] },
-    ],
-  },
+const ALL: Role[] = ["employee", "manager", "hr_admin"];
+
+// Order is the order shown. Each role gets at most five, so it fits a phone's tab bar.
+const NAV: NavItem[] = [
+  { to: "/home", label: "Home", icon: House, roles: ALL },
+  { to: "/calendar", label: "Calendar", icon: CalendarDays, roles: ALL },
+  { to: "/requests", label: "Requests", icon: ClipboardList, roles: ["employee", "manager"] },
+  { to: "/roster", label: "Roster", icon: LayoutGrid, roles: ["manager", "hr_admin"] },
+  { to: "/inbox", label: "Inbox", icon: Inbox, roles: ALL },
+  { to: "/settings", label: "Settings", icon: Settings, roles: ["hr_admin"] },
 ];
 
 const ROLE_LABEL: Record<Role, string> = { employee: "Employee", manager: "Manager", hr_admin: "HR Admin" };
 
-export function navFor(role: Role): { title: string; items: NavItem[] }[] {
-  return GROUPS.map((g) => ({ ...g, items: g.items.filter((i) => i.roles.includes(role)) })).filter((g) => g.items.length);
+export function navFor(role: Role): NavItem[] {
+  return NAV.filter((i) => i.roles.includes(role));
+}
+
+function initials(name: string): string {
+  return name.split(/\s+/).filter(Boolean).slice(0, 2).map((p) => p[0].toUpperCase()).join("");
 }
 
 export default function Layout() {
@@ -53,9 +40,9 @@ export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [unread, setUnread] = useState(0);
-  const [navOpen, setNavOpen] = useState(false);
+  const menu = useRef<HTMLDetailsElement>(null);
 
-  // Unread count: on every navigation, every 60 s, and when the inbox page says it changed.
+  // Unread count: on every navigation, every 60 s, and when the inbox says it changed.
   useEffect(() => {
     let alive = true;
     const load = () => api.notifications(true).then((n) => alive && setUnread(n.unread)).catch(() => undefined);
@@ -69,60 +56,75 @@ export default function Layout() {
     };
   }, [location.pathname]);
 
-  useEffect(() => setNavOpen(false), [location.pathname]);
+  // The user menu closes on navigation and on any click outside it.
+  useEffect(() => menu.current?.removeAttribute("open"), [location.pathname]);
+  useEffect(() => {
+    const close = (e: MouseEvent) => {
+      if (menu.current && !menu.current.contains(e.target as Node)) menu.current.removeAttribute("open");
+    };
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, []);
+
+  const items = navFor(me.role);
+  const hasSettings = me.role !== "employee";
+  const badge = (to: string) => to === "/inbox" && unread > 0 ? <span className="nav-count" aria-label={`${unread} unread`}>{unread}</span> : null;
 
   return (
-    <div className={`shell${navOpen ? " nav-open" : ""}`}>
-      <aside className="sidebar" aria-label="Main navigation">
-        <div className="brand">
+    <div className="app">
+      <header className="topbar">
+        <Link to="/home" className="brand">
           <span className="brand-mark" aria-hidden="true">L</span>
           <span>Leave &amp; Shifts</span>
-        </div>
-        <nav className="nav">
-          {navFor(me.role).map((group) => (
-            <div key={group.title}>
-              <div className="nav-group">{group.title}</div>
-              {group.items.map((item) => (
-                <NavLink key={item.to} to={item.to}>
-                  {item.label}
-                  {item.to === "/notifications" && unread > 0 && (
-                    <span className="bell-count" aria-label={`${unread} unread`}>{unread}</span>
-                  )}
-                </NavLink>
-              ))}
-            </div>
+        </Link>
+        <nav className="topnav" aria-label="Main navigation">
+          {items.map(({ to, label, icon: Icon }) => (
+            <NavLink key={to} to={to}>
+              <Icon size={19} aria-hidden="true" className="icon" />
+              {label}
+              {badge(to)}
+            </NavLink>
           ))}
         </nav>
-        <div className="user-box">
-          <div><strong>{me.name}</strong></div>
-          <div className="role">{ROLE_LABEL[me.role]}{me.team_name ? ` · ${me.team_name}` : ""}</div>
-        </div>
-      </aside>
-      {navOpen && <div className="nav-scrim" onClick={() => setNavOpen(false)} aria-hidden="true" />}
-      <div className="main">
-        <div className="topbar">
-          <button type="button" className="menu-toggle ghost" aria-label="Open menu" aria-expanded={navOpen}
-            onClick={() => setNavOpen((v) => !v)}>☰ Menu</button>
-          <span className="today">Today: {formatDate(me.today)} {me.today.slice(0, 4)} (IST)</span>
-          <Link to="/notifications" className="button ghost bell" aria-label={`Notifications, ${unread} unread`}>
-            <span aria-hidden="true">🔔</span>
-            {unread > 0 && <span className="bell-count" aria-hidden="true">{unread}</span>}
-          </Link>
-          <button
-            type="button"
-            className="secondary"
-            onClick={async () => {
-              await logout();
-              navigate("/login", { replace: true });
-            }}
-          >
-            Sign out
-          </button>
-        </div>
-        <main id="main">
-          <Outlet />
-        </main>
-      </div>
+        <details className="usermenu" ref={menu}>
+          <summary aria-label="Account menu">
+            <span className="avatar" aria-hidden="true">{initials(me.name)}</span>
+            <span className="usermenu-name">
+              <strong>{me.name}</strong>
+              <small>{ROLE_LABEL[me.role]}{me.team_name ? ` · ${me.team_name}` : ""}</small>
+            </span>
+          </summary>
+          <div className="usermenu-panel">
+            <div className="who">
+              <strong>{me.name}</strong>
+              <div className="muted small">{me.email}</div>
+            </div>
+            {hasSettings && me.role !== "hr_admin" && (
+              <Link to="/settings"><Settings size={18} aria-hidden="true" className="icon" />Team settings</Link>
+            )}
+            <button
+              type="button"
+              onClick={async () => {
+                await logout();
+                navigate("/login", { replace: true });
+              }}
+            >
+              <LogOut size={18} aria-hidden="true" className="icon" />Sign out
+            </button>
+          </div>
+        </details>
+      </header>
+      <main id="main">
+        <Outlet />
+      </main>
+      <nav className="tabbar" aria-label="Main navigation">
+        {items.map(({ to, label, icon: Icon }) => (
+          <NavLink key={to} to={to}>
+            <span className="tab-icon"><Icon size={22} aria-hidden="true" className="icon" />{badge(to)}</span>
+            {label}
+          </NavLink>
+        ))}
+      </nav>
     </div>
   );
 }

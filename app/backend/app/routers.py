@@ -58,12 +58,13 @@ async def list_users(ctx: ReadCtx, include_inactive: bool = False, team_id: int 
 
 @api.post("/users", tags=["users"], status_code=201)
 async def create_user(body: UserCreate, ctx: WriteCtx) -> dict:
-    return await org.create_user(ctx, body.name, body.email, body.role, body.team_id, body.password, body.join_date)
+    return await org.create_user(ctx, body.name, body.email, body.role, body.team_id, body.password, body.join_date,
+                                 body.date_of_birth)
 
 
 @api.patch("/users/{user_id}", tags=["users"])
 async def update_user(user_id: int, body: UserUpdate, ctx: WriteCtx) -> dict:
-    return await org.update_user(ctx, user_id, body.sent("team_id"))
+    return await org.update_user(ctx, user_id, body.sent("team_id", "date_of_birth"))
 
 
 @api.delete("/users/{user_id}", tags=["users"])

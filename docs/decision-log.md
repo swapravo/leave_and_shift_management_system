@@ -273,3 +273,39 @@ turned down, for every change made to this repository.
   frontend is covered by Vitest units, the type check and a manual browser run. All three BRD success criteria
   were checked in Chromium against the seeded app (desktop and 390 px).
 - **Affects:** `app/frontend/`, `app/scripts/test-all.sh`, `app/README.md`, `docs/03-technical-requirements.md`
+
+### D-013: Birthday leave
+- **Date:** 2026-10-30
+- **Status:** Accepted
+- **Decided by:** Owner (the feature, and the three behaviours in 1–3); Claude, proposed (the rest)
+- **Context:** "A person is assigned a casual leave on their birthday." Users had no date of birth, leave always needed
+  an approver, and the schema had no migration step.
+- **Decision:**
+  1. **A bonus day, auto-booked:** on the birthday the system credits +1 Casual Leave and books it as approved leave
+     for that day, so the person's usual Casual days are untouched. Their shift that day comes off the roster.
+  2. **Weekend birthday → nearest working day:** Saturday moves to Friday, Sunday to Monday (leave only counts
+     Mon–Fri). 29 Feb is 28 Feb in a common year, then the same rule.
+  3. **Always granted:** if it leaves a shift below its minimum, the manager (or HR, for a manager's birthday) gets
+     the usual "below minimum" notice; the day is not withheld.
+  4. **Booked 30 days ahead**, so the roster can plan for it; an hourly pass (and server start, and any date-of-birth
+     change) looks for newly due birthdays. Idempotent.
+  5. **Once per birthday:** `birthday_grants` remembers it even if the person cancels the leave. Cancelling refunds the
+     day, so the bonus stays in their balance to use as they like.
+  6. **Already on leave that day:** +1 day is credited, nothing is booked, and the person is told.
+  7. **Leave type is found by name** ("Casual Leave", active). No such type → nothing happens.
+  8. **No approver:** `leave_requests.decided_by` may be NULL only when `reason = 'Birthday leave'`; the bonus is an
+     ordinary `adjustment` ledger row with no creator. Audited as the System (`leave.birthday`).
+  9. **Date of birth** is set by HR on a user (create or edit); only HR can read it. It must be in the past. HR Admins
+     don't get one (they take no leave).
+  10. **Schema 2 and a first upgrade step:** `db.upgrade` adds `users.date_of_birth` and rebuilds `leave_requests` for
+      the relaxed CHECK when it finds an older database (SQLite can't alter a CHECK). It is idempotent and a no-op on a
+      current database. Still no general migration tool (see docs/03-technical-requirements.md).
+- **Why:** Keeps birthday leave inside the existing leave, ledger, roster and audit paths instead of a parallel one,
+  so balances, calendars, cancellation and coverage all behave as they already do.
+- **Alternatives considered:** Deducting from the normal Casual balance (a birthday would cost a day, not give one);
+  only crediting the day and letting the person book it (not "on their birthday"); granting on the day itself (the
+  roster couldn't plan); a fake system user as the approver (breaks HR counts and "approved by").
+- **Consequences:** The seed gives everyone a date of birth, all 40+ days away except Sneha Patel's, which is booked
+  so the feature is visible in the demo. A user's date of birth appears in the Users table (HR only).
+- **Affects:** `app/backend/app/services/birthday.py`, `db.py`, `schema.sql`, `services/org.py`, `main.py`, `seed.py`,
+  `docs/00-feature-plan.md`, `docs/05-data-model.md`, `docs/openapi.yaml`, the Users page.

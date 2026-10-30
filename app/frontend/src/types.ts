@@ -22,6 +22,7 @@ export interface User {
   team_id: number | null;
   team_name: string | null;
   join_date: ISODate;
+  date_of_birth: ISODate | null;
   active: boolean;
   created_at: string;
   deactivated_at: string | null;

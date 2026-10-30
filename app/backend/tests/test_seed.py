@@ -57,7 +57,8 @@ def test_seed_data_passes_every_rule(tmp_path):
         gaps = [(x["shift_name"], x["date"]) for x in cal["cells"] if x["gap"] and x["date"] >= "2026-06-10"]
         assert gaps == [("Evening", "2026-06-10")]
         audit = hr.get("/api/audit").json()
-        assert [e["action"] for e in audit["entries"]] == ["user.login", "seed"]
+        actions = [e["action"] for e in audit["entries"]]
+        assert actions[:2] == ["user.login", "seed"] and "leave.birthday" in actions[2:]
 
 
 def test_reset_route_only_exists_in_test_mode(tmp_path):

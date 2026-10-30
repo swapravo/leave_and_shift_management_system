@@ -32,9 +32,44 @@ async def connect(path: str | None = None) -> aiosqlite.Connection:
 
 
 async def init_db(conn: aiosqlite.Connection) -> None:
-    """Create the schema (idempotent) and switch the database to WAL mode."""
+    """Create the schema (idempotent), bring an older database up to date, and switch to WAL mode."""
     await conn.executescript(SCHEMA_PATH.read_text())
+    await upgrade(conn)
     await conn.execute("PRAGMA journal_mode = WAL")
+
+
+_OLD_APPROVAL_CHECK = "decided_by IS NOT NULL AND decided_at IS NOT NULL"
+
+
+async def upgrade(conn: aiosqlite.Connection) -> None:
+    """Schema 1 -> 2 (birthday leave) for a database created before it. A no-op on a current database.
+
+    CREATE TABLE IF NOT EXISTS leaves existing tables as they were, so the two changes to existing tables are made
+    here: users.date_of_birth (a plain column), and leave_requests, whose CHECK now lets the system's birthday grant
+    be approved without a human approver (SQLite can't alter a CHECK, so the table is rebuilt, rows intact).
+    """
+    cols = {r["name"] for r in await fetch_all(conn, "PRAGMA table_info(users)")}
+    if "date_of_birth" not in cols:
+        await conn.execute(
+            "ALTER TABLE users ADD COLUMN date_of_birth TEXT "
+            "CHECK (date_of_birth IS NULL OR date(date_of_birth) IS date_of_birth)"
+        )
+    table_sql = await fetch_value(conn, "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'leave_requests'")
+    if table_sql and _OLD_APPROVAL_CHECK in table_sql:
+        create = re.search(r"CREATE TABLE IF NOT EXISTS leave_requests \(.*?\) STRICT;", SCHEMA_PATH.read_text(), re.S)
+        assert create, "leave_requests definition not found in schema.sql"
+        fresh = create.group(0).replace("CREATE TABLE IF NOT EXISTS leave_requests", "CREATE TABLE leave_requests_new")
+        # The documented 12-step rebuild: foreign keys off, copy, drop, rename. Child tables keep pointing at the name.
+        await conn.executescript(
+            f"PRAGMA foreign_keys = OFF; BEGIN; {fresh} "
+            "INSERT INTO leave_requests_new SELECT * FROM leave_requests; "
+            "DROP TABLE leave_requests; ALTER TABLE leave_requests_new RENAME TO leave_requests; COMMIT; "
+            "PRAGMA foreign_keys = ON;"
+        )
+        await conn.executescript(SCHEMA_PATH.read_text())  # recreate the indexes the drop took with it
+        broken = await fetch_all(conn, "PRAGMA foreign_key_check")
+        assert not broken, f"foreign keys broken by the leave_requests rebuild: {broken}"
+    await conn.execute("UPDATE schema_meta SET value = '2' WHERE key = 'schema_version' AND value < '2'")
 
 
 def audit_trigger_statements() -> list[str]:

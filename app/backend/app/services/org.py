@@ -8,7 +8,7 @@ import aiosqlite
 from .. import clock, db
 from ..auth import ROLES, Ctx, hash_password, require_roles
 from ..errors import Conflict, Forbidden, NotFound, ValidationFailed
-from . import accrual, audit
+from . import accrual, audit, birthday
 from .common import get_user
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
@@ -23,6 +23,7 @@ def user_out(row: dict) -> dict:
         "team_id": row["team_id"],
         "team_name": row.get("team_name"),
         "join_date": row["join_date"],
+        "date_of_birth": row["date_of_birth"],
         "active": bool(row["active"]),
         "created_at": row["created_at"],
         "deactivated_at": row["deactivated_at"],
@@ -30,7 +31,7 @@ def user_out(row: dict) -> dict:
 
 
 def _snapshot(row: dict) -> dict:
-    return {k: row[k] for k in ("name", "email", "role", "team_id", "join_date", "active")}
+    return {k: row[k] for k in ("name", "email", "role", "team_id", "join_date", "date_of_birth", "active")}
 
 
 def _normalise_email(email: str) -> str:
@@ -38,6 +39,11 @@ def _normalise_email(email: str) -> str:
     if not EMAIL_RE.match(email):
         raise ValidationFailed("Enter a valid email address")
     return email
+
+
+def _check_birth_date(value: date | None) -> None:
+    if value is not None and not date(1900, 1, 1) <= value < clock.today():
+        raise ValidationFailed("Enter a date of birth in the past")
 
 
 def _check_password(password: str) -> None:
@@ -99,7 +105,8 @@ async def list_users(ctx: Ctx, include_inactive: bool, team_id: int | None) -> l
 
 
 async def create_user(
-    ctx: Ctx, name: str, email: str, role: str, team_id: int | None, password: str, join_date: date | None
+    ctx: Ctx, name: str, email: str, role: str, team_id: int | None, password: str, join_date: date | None,
+    date_of_birth: date | None = None,
 ) -> dict:
     require_roles(ctx.user, "hr_admin")
     name = (name or "").strip()
@@ -110,21 +117,24 @@ async def create_user(
         raise ValidationFailed("Unknown role")
     await _check_team(ctx.conn, role, team_id)
     _check_password(password)
+    _check_birth_date(date_of_birth)
     if await _email_taken(ctx.conn, email):
         raise Conflict("A user with this email already exists", code="DUPLICATE")
     now = clock.now_iso()
     user_id = await db.execute(
         ctx.conn,
-        """INSERT INTO users (name, email, password_hash, role, team_id, join_date, password_changed_at, created_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-        (name, email, await hash_password(password), role, team_id,
-         (join_date or clock.today()).isoformat(), clock.real_now().isoformat(), now),
+        """INSERT INTO users (name, email, password_hash, role, team_id, join_date, date_of_birth,
+                              password_changed_at, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+        (name, email, await hash_password(password), role, team_id, (join_date or clock.today()).isoformat(),
+         date_of_birth.isoformat() if date_of_birth else None, clock.real_now().isoformat(), now),
     )
     row = await get_user(ctx.conn, user_id)
     await audit.record(ctx.conn, ctx.user, "user.create", "user", user_id, after=_snapshot(row), team_id=team_id)
     if role in accrual.ELIGIBLE_ROLES:
         await accrual.catch_up(ctx.conn, user_id)
-    return user_out(row)
+        await birthday.run(ctx.conn, user_id)
+    return user_out(await get_user(ctx.conn, user_id))
 
 
 async def update_user(ctx: Ctx, user_id: int, changes: dict) -> dict:
@@ -158,6 +168,8 @@ async def update_user(ctx: Ctx, user_id: int, changes: dict) -> dict:
     password = changes.get("password")
     if password is not None:
         _check_password(password)
+    dob = changes.get("date_of_birth", date.fromisoformat(before["date_of_birth"]) if before["date_of_birth"] else None)
+    _check_birth_date(dob)
 
     if team_id != before["team_id"] or role != before["role"]:
         await _stop_managing(ctx.conn, ctx.user, user_id)
@@ -165,8 +177,8 @@ async def update_user(ctx: Ctx, user_id: int, changes: dict) -> dict:
         await _release_future_shifts(ctx.conn, ctx.user, user_id, "Moved to another team")
 
     await db.execute(
-        ctx.conn, "UPDATE users SET name = ?, email = ?, role = ?, team_id = ? WHERE id = ?",
-        (name, email, role, team_id, user_id),
+        ctx.conn, "UPDATE users SET name = ?, email = ?, role = ?, team_id = ?, date_of_birth = ? WHERE id = ?",
+        (name, email, role, team_id, dob.isoformat() if dob else None, user_id),
     )
     if password is not None:
         await db.execute(
@@ -179,7 +191,9 @@ async def update_user(ctx: Ctx, user_id: int, changes: dict) -> dict:
                        after=snap_after, team_id=team_id or before["team_id"])
     if role in accrual.ELIGIBLE_ROLES and before["role"] not in accrual.ELIGIBLE_ROLES:
         await accrual.catch_up(ctx.conn, user_id)
-    return user_out(after)
+    if role in accrual.ELIGIBLE_ROLES:
+        await birthday.run(ctx.conn, user_id)
+    return user_out(await get_user(ctx.conn, user_id))
 
 
 async def deactivate_user(ctx: Ctx, user_id: int) -> dict:

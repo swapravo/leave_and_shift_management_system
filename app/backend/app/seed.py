@@ -15,12 +15,13 @@ import aiosqlite
 
 from . import auth, clock, db
 from .config import load_settings
-from .services import accrual, audit, coverage
+from .services import accrual, audit, birthday, coverage
 from .services.common import fmt_range
 
 PASSWORD = "password123"
 PASSWORD_CHANGED_AT = "2020-01-01T00:00:00+05:30"
 EPOCH_MONDAY = date(2000, 1, 3)
+BIRTHDAY_DEMO_USER = 8  # Sneha Patel: her birthday falls inside the next two weeks, so the booked leave is on show
 
 HR = (1, "Asha Rao", "hr@example.com")
 TEAMS = [
@@ -47,7 +48,7 @@ TEMPLATES = [
 ]
 TABLES_IN_DELETE_ORDER = [
     "audit_log", "notifications", "swap_requests", "leave_refund_days", "leave_removed_shifts", "balance_ledger",
-    "leave_requests", "shift_assignments", "shift_templates", "users", "teams", "leave_types",
+    "birthday_grants", "leave_requests", "shift_assignments", "shift_templates", "users", "teams", "leave_types",
 ]
 
 _hash_cache: dict[str, str] = {}
@@ -61,6 +62,14 @@ async def _password_hash() -> str:
 
 def _email(name: str) -> str:
     return f"{name.split()[0].lower()}@example.com"
+
+
+def _birth_date(birthday: date, year: int) -> str:
+    """A date of birth in `year` that falls on `birthday`'s month and day (29 Feb becomes 28 Feb)."""
+    try:
+        return date(year, birthday.month, birthday.day).isoformat()
+    except ValueError:
+        return date(year, 2, 28).isoformat()
 
 
 def _first_weekday_on_or_after(d: date, weekday: int) -> date:
@@ -86,11 +95,13 @@ async def seed(conn: aiosqlite.Connection) -> None:
     recent = (10, f"{year}-{max(1, today.month - 3):02d}-01")
     for uid, name, email, role, team_id, joined in users:
         joined = recent[1] if uid == recent[0] else joined
+        # Everyone's birthday is 40+ days away (spread out), so only the demo user's, set below, is due now.
+        born = None if role == "hr_admin" else _birth_date(today + timedelta(days=40 + 20 * (uid % 15)), 1985 + uid % 15)
         await db.execute(
             conn,
-            """INSERT INTO users (id, name, email, password_hash, role, team_id, join_date, password_changed_at,
-                                  created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-            (uid, name, email, pw, role, team_id, joined, PASSWORD_CHANGED_AT, stamp),
+            """INSERT INTO users (id, name, email, password_hash, role, team_id, join_date, date_of_birth,
+                                  password_changed_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (uid, name, email, pw, role, team_id, joined, born, PASSWORD_CHANGED_AT, stamp),
         )
     for team_id, _, _, (mid, _), _ in TEAMS:
         await db.execute(conn, "UPDATE teams SET manager_id = ? WHERE id = ?", (mid, team_id))
@@ -171,6 +182,11 @@ async def seed(conn: aiosqlite.Connection) -> None:
                VALUES (?, ?, ?, ?, ?, ?, 'pending', ?)""",
             (user_id, type_id, start.isoformat(), end.isoformat(), days, "Family function", stamp),
         )
+
+    # ---- birthday leave: the demo user's birthday is on a weekday soon where their day off breaks no shift --------
+    day, _ = await _window(conn, BIRTHDAY_DEMO_USER, today + timedelta(days=4), today + timedelta(days=20), (1,))
+    await db.execute(conn, "UPDATE users SET date_of_birth = ? WHERE id = ?", (_birth_date(day, 1993), BIRTHDAY_DEMO_USER))
+    await birthday.run(conn)
 
     await audit.record(conn, None, "seed", "system", None, after={"today": today.isoformat()})
 
