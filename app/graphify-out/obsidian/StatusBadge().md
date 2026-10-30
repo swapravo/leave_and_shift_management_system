@@ -13,7 +13,7 @@ tags:
 
 ## Connections
 - [[Calendar.tsx]] - `imports` [EXTRACTED]
-- [[Cell()]] - `calls` [EXTRACTED]
+- [[Cell()_1]] - `calls` [EXTRACTED]
 - [[DayPanel()]] - `calls` [EXTRACTED]
 - [[DetailBody()]] - `calls` [EXTRACTED]
 - [[LeaveCard()]] - `calls` [EXTRACTED]

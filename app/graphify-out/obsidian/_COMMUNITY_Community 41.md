@@ -1,27 +1,16 @@
 ---
 type: community
-members: 14
+members: 3
 ---
 
 # Community 41
 
-**Members:** 14 nodes
+**Members:** 3 nodes
 
 ## Members
-- [[@testing-libraryreact]] - concept - frontend/package.json
-- [[@testing-libraryreact@16.3.0]] - code - frontend/package.json
-- [[@testing-libraryuser-event]] - concept - frontend/package.json
-- [[@testing-libraryuser-event@14.6.1]] - code - frontend/package.json
-- [[BENEFITS]] - code - frontend/src/pages/Landing.tsx
-- [[FAQ]] - code - frontend/src/pages/Landing.tsx
-- [[LEADS]] - code - frontend/src/pages/Landing.tsx
-- [[Landing()]] - code - frontend/src/pages/Landing.tsx
-- [[Landing.test.tsx]] - code - frontend/src/pages/Landing.test.tsx
-- [[Landing.tsx]] - code - frontend/src/pages/Landing.tsx
-- [[PROBLEMS]] - code - frontend/src/pages/Landing.tsx
-- [[PROOF]] - code - frontend/src/pages/Landing.tsx
-- [[RangePicker.test.tsx]] - code - frontend/src/components/RangePicker.test.tsx
-- [[STEPS]] - code - frontend/src/pages/Landing.tsx
+- [[Mon-Fri dates in start, end.]] - rationale - backend/app/services/leave.py
+- [[test_working_days_counts_monday_to_friday_only()]] - code - backend/tests/test_leave.py
+- [[working_days()]] - code - backend/app/services/leave.py
 
 ## Live Query (requires Dataview plugin)
 
@@ -31,15 +20,10 @@ SORT file.name ASC
 ```
 
 ## Connections to other communities
-- 5 edges to [[_COMMUNITY_Community 12]]
-- 4 edges to [[_COMMUNITY_Community 5]]
-- 2 edges to [[_COMMUNITY_Community 6]]
-- 2 edges to [[_COMMUNITY_Community 3]]
-- 1 edge to [[_COMMUNITY_Community 21]]
+- 3 edges to [[_COMMUNITY_Community 9]]
+- 2 edges to [[_COMMUNITY_Community 13]]
+- 1 edge to [[_COMMUNITY_Community 15]]
 
 ## Top bridge nodes
-- [[Landing.tsx]] - degree 11, connects to 2 communities
-- [[@testing-libraryreact]] - degree 5, connects to 2 communities
-- [[@testing-libraryuser-event]] - degree 4, connects to 2 communities
-- [[Landing()]] - degree 4, connects to 1 community
-- [[RangePicker.test.tsx]] - degree 4, connects to 1 community
+- [[working_days()]] - degree 7, connects to 3 communities
+- [[test_working_days_counts_monday_to_friday_only()]] - degree 2, connects to 1 community

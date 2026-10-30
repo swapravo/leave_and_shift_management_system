@@ -1,19 +1,17 @@
 ---
-source_file: "backend/tests/test_roster.py"
+source_file: "frontend/src/swapOptions.test.ts"
 type: "code"
-community: "Community 19"
-location: "L12"
+community: "Community 38"
+location: "L4"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_19
+  - community/Community_38
 ---
 
 # cell()
 
 ## Connections
-- [[test_cells_show_headcount_against_minimum()]] - `calls` [EXTRACTED]
-- [[test_inactive_people_do_not_count()]] - `calls` [EXTRACTED]
-- [[test_roster.py]] - `contains` [EXTRACTED]
+- [[swapOptions.test.ts]] - `contains` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_19
+#graphify/code #graphify/EXTRACTED #community/Community_38

@@ -1,12 +1,12 @@
 ---
 source_file: "frontend/vite.config.ts"
 type: "code"
-community: "Community 43"
+community: "Community 5"
 location: "L1"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_43
+  - community/Community_5
 ---
 
 # vite.config.ts
@@ -15,4 +15,4 @@ tags:
 - [[@vitejsplugin-react]] - `imports_from` [EXTRACTED]
 - [[vite]] - `imports_from` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_43
+#graphify/code #graphify/EXTRACTED #community/Community_5

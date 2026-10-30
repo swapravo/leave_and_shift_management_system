@@ -2,7 +2,7 @@
 source_file: "frontend/src/pages/Users.tsx"
 type: "code"
 community: "Community 3"
-location: "L85"
+location: "L95"
 tags:
   - graphify/code
   - graphify/EXTRACTED
@@ -27,6 +27,7 @@ tags:
 - [[UserDialog()]] - `calls` [EXTRACTED]
 - [[Users.tsx]] - `contains` [EXTRACTED]
 - [[formatDate()]] - `calls` [EXTRACTED]
+- [[formatDayMonth()]] - `calls` [EXTRACTED]
 - [[useAction()]] - `calls` [EXTRACTED]
 - [[useLoad()]] - `calls` [EXTRACTED]
 - [[useMe()]] - `calls` [EXTRACTED]

@@ -12,7 +12,7 @@ tags:
 # _auto_cancel()
 
 ## Connections
-- [[Connection_1]] - `references` [EXTRACTED]
+- [[Connection_4]] - `references` [EXTRACTED]
 - [[_label()]] - `calls` [EXTRACTED]
 - [[cancel_for_assignments()]] - `calls` [EXTRACTED]
 - [[cancel_for_user()]] - `calls` [EXTRACTED]

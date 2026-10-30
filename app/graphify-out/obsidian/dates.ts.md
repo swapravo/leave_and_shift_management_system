@@ -32,6 +32,7 @@ tags:
 - [[daysBetween()]] - `contains` [EXTRACTED]
 - [[decisions.tsx]] - `imports_from` [EXTRACTED]
 - [[formatDate()]] - `contains` [EXTRACTED]
+- [[formatDayMonth()]] - `contains` [EXTRACTED]
 - [[formatDays()]] - `contains` [EXTRACTED]
 - [[formatRange()]] - `contains` [EXTRACTED]
 - [[formatTimestamp()]] - `contains` [EXTRACTED]

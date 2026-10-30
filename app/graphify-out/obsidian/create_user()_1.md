@@ -2,7 +2,7 @@
 source_file: "backend/app/services/org.py"
 type: "code"
 community: "Community 10"
-location: "L101"
+location: "L107"
 tags:
   - graphify/code
   - graphify/EXTRACTED
@@ -15,6 +15,7 @@ tags:
 - [[Conflict]] - `calls` [EXTRACTED]
 - [[Ctx]] - `uses` [INFERRED]
 - [[ValidationFailed]] - `calls` [EXTRACTED]
+- [[_check_birth_date()]] - `calls` [EXTRACTED]
 - [[_check_password()]] - `calls` [EXTRACTED]
 - [[_check_team()]] - `calls` [EXTRACTED]
 - [[_email_taken()]] - `calls` [EXTRACTED]
@@ -31,6 +32,7 @@ tags:
 - [[real_now()]] - `calls` [EXTRACTED]
 - [[record()]] - `calls` [EXTRACTED]
 - [[require_roles()]] - `calls` [EXTRACTED]
+- [[run()]] - `calls` [EXTRACTED]
 - [[today()]] - `calls` [EXTRACTED]
 - [[user_out()]] - `calls` [EXTRACTED]
 

@@ -12,9 +12,9 @@ tags:
 # _refund_day()
 
 ## Connections
-- [[Connection_11]] - `references` [EXTRACTED]
+- [[Connection_12]] - `references` [EXTRACTED]
 - [[_cancel_approved()]] - `calls` [EXTRACTED]
-- [[date_9]] - `references` [EXTRACTED]
+- [[date_11]] - `references` [EXTRACTED]
 - [[execute()]] - `calls` [EXTRACTED]
 - [[fmt_day()]] - `calls` [EXTRACTED]
 - [[leave.py]] - `contains` [EXTRACTED]

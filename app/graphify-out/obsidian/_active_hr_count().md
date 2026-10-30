@@ -2,7 +2,7 @@
 source_file: "backend/app/services/org.py"
 type: "code"
 community: "Community 10"
-location: "L67"
+location: "L73"
 tags:
   - graphify/code
   - graphify/EXTRACTED
@@ -12,7 +12,7 @@ tags:
 # _active_hr_count()
 
 ## Connections
-- [[Connection]] - `references` [EXTRACTED]
+- [[Connection_1]] - `references` [EXTRACTED]
 - [[deactivate_user()_1]] - `calls` [EXTRACTED]
 - [[fetch_value()]] - `calls` [EXTRACTED]
 - [[org.py]] - `contains` [EXTRACTED]

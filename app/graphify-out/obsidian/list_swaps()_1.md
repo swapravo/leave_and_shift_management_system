@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/services/swaps.py"
 type: "code"
-community: "Community 8"
+community: "Community 11"
 location: "L276"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_8
+  - community/Community_11
 ---
 
 # list_swaps()
@@ -19,4 +19,4 @@ tags:
 - [[list_swaps()]] - `calls` [EXTRACTED]
 - [[swaps.py]] - `contains` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_8
+#graphify/code #graphify/EXTRACTED #community/Community_11

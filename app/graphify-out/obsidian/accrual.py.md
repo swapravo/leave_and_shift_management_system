@@ -26,7 +26,6 @@ tags:
 - [[auth.py]] - `imports_from` [EXTRACTED]
 - [[available()]] - `contains` [EXTRACTED]
 - [[balances_for()]] - `contains` [EXTRACTED]
-- [[birthday.py]] - `imports_from` [EXTRACTED]
 - [[catch_up()]] - `contains` [EXTRACTED]
 - [[clock.py]] - `imports_from` [EXTRACTED]
 - [[common.py]] - `imports_from` [EXTRACTED]

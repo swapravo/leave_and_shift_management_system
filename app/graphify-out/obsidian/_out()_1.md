@@ -12,7 +12,7 @@ tags:
 # _out()
 
 ## Connections
-- [[Connection_11]] - `references` [EXTRACTED]
+- [[Connection_12]] - `references` [EXTRACTED]
 - [[_can_decide()]] - `calls` [EXTRACTED]
 - [[_detail()]] - `calls` [EXTRACTED]
 - [[apply()_1]] - `calls` [EXTRACTED]

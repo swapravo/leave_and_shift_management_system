@@ -1,18 +1,18 @@
 ---
 source_file: "backend/app/services/birthday.py"
 type: "code"
-community: "Community 14"
-location: "L74"
+community: "Community 17"
+location: "L73"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_14
+  - community/Community_17
 ---
 
 # _grant()
 
 ## Connections
-- [[Connection_2]] - `references` [EXTRACTED]
+- [[Connection_7]] - `references` [EXTRACTED]
 - [[birthday.py]] - `contains` [EXTRACTED]
 - [[date_3]] - `references` [EXTRACTED]
 - [[execute()]] - `calls` [EXTRACTED]
@@ -20,12 +20,12 @@ tags:
 - [[fetch_one()]] - `calls` [EXTRACTED]
 - [[fmt_day()]] - `calls` [EXTRACTED]
 - [[hr_admin_ids()]] - `calls` [EXTRACTED]
+- [[leave_violations()]] - `calls` [EXTRACTED]
 - [[notify()]] - `calls` [EXTRACTED]
 - [[now_iso()]] - `calls` [EXTRACTED]
-- [[r2()]] - `calls` [EXTRACTED]
 - [[record()]] - `calls` [EXTRACTED]
 - [[remove_assignments()]] - `calls` [EXTRACTED]
 - [[run()]] - `calls` [EXTRACTED]
 - [[team_manager_id()]] - `calls` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_14
+#graphify/code #graphify/EXTRACTED #community/Community_17

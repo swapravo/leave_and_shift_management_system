@@ -1,12 +1,12 @@
 ---
 source_file: "frontend/src/hooks.ts"
 type: "code"
-community: "Community 3"
+community: "Community 21"
 location: "L12"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_3
+  - community/Community_21
 ---
 
 # useLoad()
@@ -44,4 +44,4 @@ tags:
 - [[asApiError()]] - `calls` [EXTRACTED]
 - [[hooks.ts]] - `contains` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_3
+#graphify/code #graphify/EXTRACTED #community/Community_21

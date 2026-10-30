@@ -1,12 +1,12 @@
 ---
 source_file: "frontend/src/pages/Inbox.tsx"
 type: "code"
-community: "Community 21"
+community: "Community 1"
 location: "L1"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_21
+  - community/Community_1
 ---
 
 # Inbox.tsx
@@ -43,4 +43,4 @@ tags:
 - [[useMe()]] - `imports` [EXTRACTED]
 - [[useSwapActions()]] - `imports` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_21
+#graphify/code #graphify/EXTRACTED #community/Community_1

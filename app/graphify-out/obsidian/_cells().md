@@ -12,7 +12,7 @@ tags:
 # _cells()
 
 ## Connections
-- [[Connection_8]] - `references` [EXTRACTED]
+- [[Connection_9]] - `references` [EXTRACTED]
 - [[coverage_grid()]] - `calls` [EXTRACTED]
 - [[fetch_all()]] - `calls` [EXTRACTED]
 - [[placeholders()]] - `calls` [EXTRACTED]

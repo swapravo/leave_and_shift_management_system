@@ -2,7 +2,7 @@
 source_file: "backend/app/schemas.py"
 type: "code"
 community: "Community 0"
-location: "L67"
+location: "L69"
 tags:
   - graphify/code
   - graphify/EXTRACTED

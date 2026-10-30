@@ -1,12 +1,12 @@
 ---
 source_file: "frontend/package.json"
 type: "concept"
-community: "Community 40"
+community: "Community 5"
 location: "L15"
 tags:
   - graphify/concept
   - graphify/EXTRACTED
-  - community/Community_40
+  - community/Community_5
 ---
 
 # @fontsource-variable/work-sans
@@ -16,4 +16,4 @@ tags:
 - [[main.tsx]] - `imports_from` [EXTRACTED]
 - [[package.json]] - `imports` [EXTRACTED]
 
-#graphify/concept #graphify/EXTRACTED #community/Community_40
+#graphify/concept #graphify/EXTRACTED #community/Community_5

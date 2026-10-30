@@ -14,7 +14,7 @@ tags:
 ## Connections
 - [[ValidationFailed]] - `calls` [EXTRACTED]
 - [[calendar()]] - `calls` [EXTRACTED]
-- [[date_6]] - `references` [EXTRACTED]
+- [[date_7]] - `references` [EXTRACTED]
 - [[my_shifts()_1]] - `calls` [EXTRACTED]
 - [[roster.py]] - `contains` [EXTRACTED]
 - [[roster_view()]] - `calls` [EXTRACTED]

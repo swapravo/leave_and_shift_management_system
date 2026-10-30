@@ -2,7 +2,7 @@
 source_file: "backend/app/services/birthday.py"
 type: "rationale"
 community: "Community 14"
-location: "L29"
+location: "L28"
 tags:
   - graphify/rationale
   - graphify/EXTRACTED

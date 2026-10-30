@@ -12,5 +12,6 @@ tags:
 
 ## Connections
 - [[config.py]] - `imports` [EXTRACTED]
+- [[main.py]] - `imports` [EXTRACTED]
 
 #graphify/concept #graphify/EXTRACTED #community/Community_24

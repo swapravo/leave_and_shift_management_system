@@ -1,23 +1,28 @@
 ---
 type: community
-members: 10
+members: 15
 ---
 
 # Community 29
 
-**Members:** 10 nodes
+**Members:** 15 nodes
 
 ## Members
-- [[C10 Read Models (calendar, dashboard), C11 Audit Log, C12 Notifications.]] - rationale - backend/tests/test_views.py
-- [[pytest]] - concept
-- [[test_a_rolled_back_change_leaves_no_audit_row()]] - code - backend/tests/test_views.py
-- [[test_audit_log_is_append_only()]] - code - backend/tests/test_views.py
-- [[test_audit_never_stores_password_hashes()]] - code - backend/tests/test_views.py
-- [[test_calendar_team_access()]] - code - backend/tests/test_views.py
-- [[test_employees_have_no_dashboard()]] - code - backend/tests/test_views.py
-- [[test_hr_dashboard_covers_all_teams_and_manager_leave()]] - code - backend/tests/test_views.py
-- [[test_nobody_is_notified_about_their_own_assignment()]] - code - backend/tests/test_views.py
-- [[test_views.py]] - code - backend/tests/test_views.py
+- [[Approved and pending leave overlapping start, end, grouped by user.]] - rationale - backend/app/services/coverage.py
+- [[C9 Coverage Engine the only place headcount and gaps are computed. Read-only.…]] - rationale - backend/app/services/coverage.py
+- [[Connection_10]] - code
+- [[One cell per (template, date) every date an active template runs, plus any…]] - rationale - backend/app/services/coverage.py
+- [[Shifts the user is rostered on in start, end that would drop below minimum…]] - rationale - backend/app/services/coverage.py
+- [[approved' beats 'pending' if both cover the day; None if neither does.]] - rationale - backend/app/services/coverage.py
+- [[collections]] - concept
+- [[coverage.py]] - code - backend/app/services/coverage.py
+- [[coverage_grid()]] - code - backend/app/services/coverage.py
+- [[dashboard()]] - code - backend/app/services/views.py
+- [[date_10]] - code
+- [[gaps()]] - code - backend/app/services/coverage.py
+- [[leave_status_on()]] - code - backend/app/services/coverage.py
+- [[leave_violations()]] - code - backend/app/services/coverage.py
+- [[leaves_by_user()]] - code - backend/app/services/coverage.py
 
 ## Live Query (requires Dataview plugin)
 
@@ -27,16 +32,19 @@ SORT file.name ASC
 ```
 
 ## Connections to other communities
-- 7 edges to [[_COMMUNITY_Community 4]]
-- 4 edges to [[_COMMUNITY_Community 13]]
-- 3 edges to [[_COMMUNITY_Community 16]]
-- 1 edge to [[_COMMUNITY_Community 19]]
-- 1 edge to [[_COMMUNITY_Community 20]]
-- 1 edge to [[_COMMUNITY_Community 31]]
+- 15 edges to [[_COMMUNITY_Community 2]]
+- 10 edges to [[_COMMUNITY_Community 17]]
+- 6 edges to [[_COMMUNITY_Community 9]]
+- 4 edges to [[_COMMUNITY_Community 11]]
+- 3 edges to [[_COMMUNITY_Community 7]]
+- 3 edges to [[_COMMUNITY_Community 15]]
+- 1 edge to [[_COMMUNITY_Community 0]]
+- 1 edge to [[_COMMUNITY_Community 10]]
+- 1 edge to [[_COMMUNITY_Community 40]]
 
 ## Top bridge nodes
-- [[test_views.py]] - degree 17, connects to 3 communities
-- [[pytest]] - degree 6, connects to 3 communities
-- [[test_a_rolled_back_change_leaves_no_audit_row()]] - degree 3, connects to 2 communities
-- [[test_audit_log_is_append_only()]] - degree 3, connects to 1 community
-- [[test_audit_never_stores_password_hashes()]] - degree 2, connects to 1 community
+- [[dashboard()]] - degree 15, connects to 7 communities
+- [[coverage.py]] - degree 20, connects to 6 communities
+- [[coverage_grid()]] - degree 16, connects to 3 communities
+- [[leave_violations()]] - degree 10, connects to 3 communities
+- [[leaves_by_user()]] - degree 10, connects to 3 communities

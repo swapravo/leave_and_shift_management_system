@@ -12,7 +12,7 @@ tags:
 # out_many()
 
 ## Connections
-- [[Connection_11]] - `references` [EXTRACTED]
+- [[Connection_12]] - `references` [EXTRACTED]
 - [[_out()_1]] - `calls` [EXTRACTED]
 - [[dashboard()]] - `calls` [EXTRACTED]
 - [[leave.py]] - `contains` [EXTRACTED]

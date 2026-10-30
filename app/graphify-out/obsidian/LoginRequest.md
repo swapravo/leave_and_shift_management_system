@@ -13,7 +13,7 @@ tags:
 
 ## Connections
 - [[Body]] - `inherits` [EXTRACTED]
-- [[login()_1]] - `uses` [INFERRED]
+- [[login()]] - `uses` [INFERRED]
 - [[routers.py]] - `imports` [EXTRACTED]
 - [[schemas.py]] - `contains` [EXTRACTED]
 

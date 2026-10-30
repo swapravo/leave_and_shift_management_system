@@ -1,19 +1,18 @@
 ---
 type: community
-members: 21
+members: 20
 ---
 
 # Community 20
 
-**Members:** 21 nodes
+**Members:** 20 nodes
 
 ## Members
 - [[dot-balance()]] - code - backend/tests/conftest.py
 - [[C5 Accrual & Balances.]] - rationale - backend/tests/test_accrual.py
-- [[World]] - code - backend/tests/conftest.py
 - [[cumulative()]] - code - backend/app/services/accrual.py
 - [[monthly_credit()]] - code - backend/app/services/accrual.py
-- [[parametrize_1]] - code
+- [[parametrize_2]] - code
 - [[round(Em12, 2) - round(E(m-1)12, 2) twelve credits always add up exactly…]] - rationale - backend/app/services/accrual.py
 - [[test_accrual.py]] - code - backend/tests/test_accrual.py
 - [[test_accrual_starts_in_the_join_month()]] - code - backend/tests/test_accrual.py
@@ -38,16 +37,15 @@ SORT file.name ASC
 ```
 
 ## Connections to other communities
-- 10 edges to [[_COMMUNITY_Community 13]]
-- 4 edges to [[_COMMUNITY_Community 4]]
+- 8 edges to [[_COMMUNITY_Community 14]]
+- 4 edges to [[_COMMUNITY_Community 18]]
+- 3 edges to [[_COMMUNITY_Community 31]]
 - 3 edges to [[_COMMUNITY_Community 7]]
-- 2 edges to [[_COMMUNITY_Community 16]]
-- 1 edge to [[_COMMUNITY_Community 31]]
-- 1 edge to [[_COMMUNITY_Community 29]]
+- 1 edge to [[_COMMUNITY_Community 16]]
 
 ## Top bridge nodes
-- [[World]] - degree 8, connects to 4 communities
-- [[test_accrual.py]] - degree 18, connects to 3 communities
+- [[dot-balance()]] - degree 11, connects to 3 communities
+- [[test_accrual.py]] - degree 18, connects to 2 communities
+- [[test_year_end_carries_forward_up_to_the_cap_and_the_rest_lapses()]] - degree 4, connects to 2 communities
+- [[test_monthly_run_is_idempotent_and_rejects_future_months()]] - degree 3, connects to 2 communities
 - [[monthly_credit()]] - degree 7, connects to 1 community
-- [[dot-balance()]] - degree 7, connects to 1 community
-- [[test_year_end_carries_forward_up_to_the_cap_and_the_rest_lapses()]] - degree 4, connects to 1 community

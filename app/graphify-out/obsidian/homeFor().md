@@ -12,7 +12,7 @@ tags:
 # homeFor()
 
 ## Connections
-- [[Login()]] - `calls` [EXTRACTED]
+- [[Login()_1]] - `calls` [EXTRACTED]
 - [[Login.tsx]] - `imports` [EXTRACTED]
 - [[auth.tsx]] - `contains` [EXTRACTED]
 - [[submit()]] - `calls` [EXTRACTED]

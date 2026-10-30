@@ -12,7 +12,7 @@ tags:
 # _visible()
 
 ## Connections
-- [[Connection_11]] - `references` [EXTRACTED]
+- [[Connection_12]] - `references` [EXTRACTED]
 - [[approvers()_1]] - `calls` [EXTRACTED]
 - [[cancel()_1]] - `calls` [EXTRACTED]
 - [[decide()_1]] - `calls` [EXTRACTED]

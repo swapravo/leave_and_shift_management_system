@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/services/accrual.py"
 type: "code"
-community: "Community 10"
+community: "Community 7"
 location: "L223"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_10
+  - community/Community_7
 ---
 
 # adjust()
@@ -27,4 +27,4 @@ tags:
 - [[require_roles()]] - `calls` [EXTRACTED]
 - [[today()]] - `calls` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_10
+#graphify/code #graphify/EXTRACTED #community/Community_7

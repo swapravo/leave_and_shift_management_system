@@ -12,7 +12,7 @@ tags:
 # pending_for()
 
 ## Connections
-- [[Connection_11]] - `references` [EXTRACTED]
+- [[Connection_12]] - `references` [EXTRACTED]
 - [[Pending requests the actor can decide, oldest start first.]] - `rationale_for` [EXTRACTED]
 - [[_requests()]] - `calls` [EXTRACTED]
 - [[dashboard()]] - `calls` [EXTRACTED]

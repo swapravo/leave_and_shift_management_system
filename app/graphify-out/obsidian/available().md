@@ -1,18 +1,18 @@
 ---
 source_file: "backend/app/services/accrual.py"
 type: "code"
-community: "Community 7"
+community: "Community 9"
 location: "L185"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_7
+  - community/Community_9
 ---
 
 # available()
 
 ## Connections
-- [[Connection_9]] - `references` [EXTRACTED]
+- [[Connection_11]] - `references` [EXTRACTED]
 - [[_check()]] - `calls` [EXTRACTED]
 - [[accrual.py]] - `contains` [EXTRACTED]
 - [[balance - pending for one type and year (what a new request may use).]] - `rationale_for` [EXTRACTED]
@@ -20,4 +20,4 @@ tags:
 - [[fetch_value()]] - `calls` [EXTRACTED]
 - [[r2()]] - `calls` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_7
+#graphify/code #graphify/EXTRACTED #community/Community_9

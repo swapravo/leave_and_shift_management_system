@@ -12,7 +12,7 @@ tags:
 # cancel_pending_for_user()
 
 ## Connections
-- [[Connection_11]] - `references` [EXTRACTED]
+- [[Connection_12]] - `references` [EXTRACTED]
 - [[Deactivation withdraw the user's pending requests.]] - `rationale_for` [EXTRACTED]
 - [[_requests()]] - `calls` [EXTRACTED]
 - [[_set_cancelled()]] - `calls` [EXTRACTED]

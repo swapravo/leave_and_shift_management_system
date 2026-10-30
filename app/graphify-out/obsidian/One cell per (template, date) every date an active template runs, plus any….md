@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/services/coverage.py"
 type: "rationale"
-community: "Community 2"
+community: "Community 29"
 location: "L50"
 tags:
   - graphify/rationale
   - graphify/EXTRACTED
-  - community/Community_2
+  - community/Community_29
 ---
 
 # One cell per (template, date): every date an active template runs, plus any…
@@ -14,4 +14,4 @@ tags:
 ## Connections
 - [[coverage_grid()]] - `rationale_for` [EXTRACTED]
 
-#graphify/rationale #graphify/EXTRACTED #community/Community_2
+#graphify/rationale #graphify/EXTRACTED #community/Community_29

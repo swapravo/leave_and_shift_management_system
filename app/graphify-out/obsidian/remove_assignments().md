@@ -1,18 +1,18 @@
 ---
 source_file: "backend/app/services/roster.py"
 type: "code"
-community: "Community 9"
+community: "Community 2"
 location: "L140"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_9
+  - community/Community_2
 ---
 
 # remove_assignments()
 
 ## Connections
-- [[Connection_8]] - `references` [EXTRACTED]
+- [[Connection_9]] - `references` [EXTRACTED]
 - [[Delete assignments (cancelling open swaps on them first), audit, notify, and…]] - `rationale_for` [EXTRACTED]
 - [[_cells()]] - `calls` [EXTRACTED]
 - [[_grant()]] - `calls` [EXTRACTED]
@@ -30,4 +30,4 @@ tags:
 - [[unassign()_1]] - `calls` [EXTRACTED]
 - [[update_template()]] - `calls` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_9
+#graphify/code #graphify/EXTRACTED #community/Community_2

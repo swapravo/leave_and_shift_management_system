@@ -10,7 +10,7 @@ import { useSwapActions } from "../components/swapActions";
 import { ConfirmDialog, Empty, ErrorBox, Loading, Modal, Notice, PageHeader, StatusBadge, TableWrap } from "../components/ui";
 import { formatDate, formatDays, formatRange, formatTimestamp, hasStarted } from "../dates";
 import { useAction, useLoad } from "../hooks";
-import { leaveStatusText, plural } from "../plain";
+import { BIRTHDAY_LEAVE_REASON, leaveStatusText, plural } from "../plain";
 import type { Balance, LeaveRequest, LeaveRequestDetail, LedgerKind } from "../types";
 
 const KIND_LABEL: Record<LedgerKind, string> = {
@@ -157,7 +157,7 @@ export default function Requests() {
                 <div>
                   <div className="title">{r.leave_type} · {formatRange(r.start_date, r.end_date, year)}</div>
                   <div className="meta">{plural(r.days, "day")} · <StatusBadge status={r.status} label={leaveStatusText(r, approver)} />
-                    {r.decision_comment ? ` — “${r.decision_comment}”` : ""}</div>
+                    {r.decision_comment && r.reason !== BIRTHDAY_LEAVE_REASON ? ` — “${r.decision_comment}”` : ""}</div>
                 </div>
                 <div className="row-actions">
                   <button type="button" className="small" onClick={() => setDetail(r.id)}>Details</button>

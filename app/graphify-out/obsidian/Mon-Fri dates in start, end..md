@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/services/leave.py"
 type: "rationale"
-community: "Community 7"
+community: "Community 41"
 location: "L20"
 tags:
   - graphify/rationale
   - graphify/EXTRACTED
-  - community/Community_7
+  - community/Community_41
 ---
 
 # Mon-Fri dates in [start, end].
@@ -14,4 +14,4 @@ tags:
 ## Connections
 - [[working_days()]] - `rationale_for` [EXTRACTED]
 
-#graphify/rationale #graphify/EXTRACTED #community/Community_7
+#graphify/rationale #graphify/EXTRACTED #community/Community_41

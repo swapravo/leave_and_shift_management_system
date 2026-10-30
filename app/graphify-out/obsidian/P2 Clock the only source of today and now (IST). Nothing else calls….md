@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/clock.py"
 type: "rationale"
-community: "Community 17"
+community: "Community 40"
 location: "L1"
 tags:
   - graphify/rationale
   - graphify/EXTRACTED
-  - community/Community_17
+  - community/Community_40
 ---
 
 # P2 Clock: the only source of "today" and "now" (IST). Nothing else calls…
@@ -14,4 +14,4 @@ tags:
 ## Connections
 - [[clock.py]] - `rationale_for` [EXTRACTED]
 
-#graphify/rationale #graphify/EXTRACTED #community/Community_17
+#graphify/rationale #graphify/EXTRACTED #community/Community_40

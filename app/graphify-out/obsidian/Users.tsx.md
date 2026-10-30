@@ -35,6 +35,7 @@ tags:
 - [[auth.tsx]] - `imports_from` [EXTRACTED]
 - [[dates.ts]] - `imports_from` [EXTRACTED]
 - [[formatDate()]] - `imports` [EXTRACTED]
+- [[formatDayMonth()]] - `imports` [EXTRACTED]
 - [[hooks.ts]] - `imports_from` [EXTRACTED]
 - [[react]] - `imports_from` [EXTRACTED]
 - [[types.ts]] - `imports_from` [EXTRACTED]

@@ -2,7 +2,7 @@
 source_file: "backend/app/seed.py"
 type: "rationale"
 community: "Community 15"
-location: "L180"
+location: "L196"
 tags:
   - graphify/rationale
   - graphify/EXTRACTED

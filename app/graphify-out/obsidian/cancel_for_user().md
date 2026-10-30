@@ -12,7 +12,7 @@ tags:
 # cancel_for_user()
 
 ## Connections
-- [[Connection_1]] - `references` [EXTRACTED]
+- [[Connection_4]] - `references` [EXTRACTED]
 - [[_auto_cancel()]] - `calls` [EXTRACTED]
 - [[deactivate_user()_1]] - `calls` [EXTRACTED]
 - [[fetch_all()]] - `calls` [EXTRACTED]

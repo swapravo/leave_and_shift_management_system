@@ -12,7 +12,7 @@ tags:
 # assignment_out()
 
 ## Connections
-- [[Connection_8]] - `references` [EXTRACTED]
+- [[Connection_9]] - `references` [EXTRACTED]
 - [[assign()_2]] - `calls` [EXTRACTED]
 - [[fetch_one()]] - `calls` [EXTRACTED]
 - [[roster.py]] - `contains` [EXTRACTED]

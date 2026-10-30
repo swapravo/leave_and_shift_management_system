@@ -13,6 +13,7 @@ tags:
 
 ## Connections
 - [[App.tsx]] - `imports_from` [EXTRACTED]
+- [[BIRTHDAY_LEAVE_REASON]] - `imports` [EXTRACTED]
 - [[Balance]] - `imports` [EXTRACTED]
 - [[BalanceCard()]] - `contains` [EXTRACTED]
 - [[ConfirmDialog()]] - `imports` [EXTRACTED]

@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/auth.py"
 type: "code"
-community: "Community 8"
+community: "Community 7"
 location: "L117"
 tags:
   - graphify/code
   - graphify/INFERRED
-  - community/Community_8
+  - community/Community_7
 ---
 
 # .is_hr()
@@ -20,4 +20,4 @@ tags:
 - [[list_swaps()_1]] - `references` [INFERRED]
 - [[list_types()]] - `references` [INFERRED]
 
-#graphify/code #graphify/INFERRED #community/Community_8
+#graphify/code #graphify/INFERRED #community/Community_7

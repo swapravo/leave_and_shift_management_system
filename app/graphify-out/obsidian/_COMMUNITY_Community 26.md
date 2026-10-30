@@ -1,14 +1,13 @@
 ---
 type: community
-members: 14
+members: 13
 ---
 
 # Community 26
 
-**Members:** 14 nodes
+**Members:** 13 nodes
 
 ## Members
-- [[FastAPI_1]] - code
 - [[_domain()]] - code - backend/app/errors.py
 - [[_http()]] - code - backend/app/errors.py
 - [[_main()]] - code - backend/app/seed.py
@@ -17,7 +16,7 @@ members: 14
 - [[configure()]] - code - backend/app/auth.py
 - [[configure()_1]] - code - backend/app/db.py
 - [[create_app()]] - code - backend/app/main.py
-- [[date_8]] - code
+- [[date_9]] - code
 - [[error_body()]] - code - backend/app/errors.py
 - [[install()]] - code - backend/app/errors.py
 - [[json_only_writes()]] - code - backend/app/main.py
@@ -31,20 +30,23 @@ SORT file.name ASC
 ```
 
 ## Connections to other communities
-- 8 edges to [[_COMMUNITY_Community 17]]
-- 5 edges to [[_COMMUNITY_Community 24]]
+- 4 edges to [[_COMMUNITY_Community 24]]
 - 4 edges to [[_COMMUNITY_Community 15]]
-- 2 edges to [[_COMMUNITY_Community 31]]
+- 3 edges to [[_COMMUNITY_Community 31]]
+- 3 edges to [[_COMMUNITY_Community 28]]
+- 3 edges to [[_COMMUNITY_Community 8]]
+- 2 edges to [[_COMMUNITY_Community 17]]
 - 2 edges to [[_COMMUNITY_Community 23]]
 - 2 edges to [[_COMMUNITY_Community 27]]
 - 2 edges to [[_COMMUNITY_Community 7]]
-- 1 edge to [[_COMMUNITY_Community 10]]
-- 1 edge to [[_COMMUNITY_Community 4]]
+- 1 edge to [[_COMMUNITY_Community 14]]
 - 1 edge to [[_COMMUNITY_Community 25]]
+- 1 edge to [[_COMMUNITY_Community 0]]
+- 1 edge to [[_COMMUNITY_Community 40]]
 
 ## Top bridge nodes
 - [[create_app()]] - degree 16, connects to 5 communities
 - [[_main()]] - degree 11, connects to 5 communities
-- [[set_today()]] - degree 6, connects to 3 communities
-- [[date_8]] - degree 3, connects to 2 communities
+- [[set_today()]] - degree 7, connects to 4 communities
+- [[date_9]] - degree 3, connects to 2 communities
 - [[error_body()]] - degree 5, connects to 1 community

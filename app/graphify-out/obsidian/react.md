@@ -1,12 +1,12 @@
 ---
 source_file: "frontend/package.json"
 type: "concept"
-community: "Community 12"
+community: "Community 3"
 location: "L17"
 tags:
   - graphify/concept
   - graphify/EXTRACTED
-  - community/Community_12
+  - community/Community_3
 ---
 
 # react
@@ -35,4 +35,4 @@ tags:
 - [[react@19.3.1]] - `declares` [EXTRACTED]
 - [[ui.tsx]] - `imports_from` [EXTRACTED]
 
-#graphify/concept #graphify/EXTRACTED #community/Community_12
+#graphify/concept #graphify/EXTRACTED #community/Community_3

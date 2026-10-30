@@ -10,9 +10,9 @@ members: 9
 ## Members
 - [[P4 Seed and P5 test reset deterministic demo data for the pinned date, and the…]] - rationale - backend/tests/test_seed.py
 - [[The seeded leave and roster are what the app itself would accept no seeded…]] - rationale - backend/tests/test_seed.py
+- [[fastapi_testclient]] - concept
 - [[login()_2]] - code - backend/tests/test_seed.py
 - [[seeded()]] - code - backend/tests/test_seed.py
-- [[settings_for()]] - code - backend/tests/conftest.py
 - [[test_reset_route_only_exists_in_test_mode()]] - code - backend/tests/test_seed.py
 - [[test_reset_seeds_the_demo_data_and_is_deterministic()]] - code - backend/tests/test_seed.py
 - [[test_seed.py]] - code - backend/tests/test_seed.py
@@ -26,12 +26,12 @@ SORT file.name ASC
 ```
 
 ## Connections to other communities
-- 3 edges to [[_COMMUNITY_Community 4]]
-- 2 edges to [[_COMMUNITY_Community 24]]
-- 2 edges to [[_COMMUNITY_Community 31]]
+- 4 edges to [[_COMMUNITY_Community 31]]
 - 2 edges to [[_COMMUNITY_Community 26]]
+- 1 edge to [[_COMMUNITY_Community 24]]
+- 1 edge to [[_COMMUNITY_Community 4]]
 
 ## Top bridge nodes
 - [[test_seed.py]] - degree 11, connects to 3 communities
-- [[settings_for()]] - degree 6, connects to 3 communities
-- [[seeded()]] - degree 6, connects to 1 community
+- [[seeded()]] - degree 6, connects to 2 communities
+- [[fastapi_testclient]] - degree 3, connects to 2 communities

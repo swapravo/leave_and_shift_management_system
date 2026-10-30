@@ -12,7 +12,7 @@ tags:
 # team_members()
 
 ## Connections
-- [[Connection_8]] - `references` [EXTRACTED]
+- [[Connection_9]] - `references` [EXTRACTED]
 - [[calendar()]] - `calls` [EXTRACTED]
 - [[dashboard()]] - `calls` [EXTRACTED]
 - [[fetch_all()]] - `calls` [EXTRACTED]

@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/auth.py"
 type: "code"
-community: "Community 17"
+community: "Community 0"
 location: "L39"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_17
+  - community/Community_0
 ---
 
 # verify_password()
@@ -14,6 +14,6 @@ tags:
 ## Connections
 - [[auth.py]] - `contains` [EXTRACTED]
 - [[check()]] - `indirect_call` [INFERRED]
-- [[login()_1]] - `calls` [EXTRACTED]
+- [[login()]] - `calls` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_17
+#graphify/code #graphify/EXTRACTED #community/Community_0

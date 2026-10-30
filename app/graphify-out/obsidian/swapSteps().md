@@ -2,7 +2,7 @@
 source_file: "frontend/src/plain.ts"
 type: "code"
 community: "Community 21"
-location: "L14"
+location: "L17"
 tags:
   - graphify/code
   - graphify/EXTRACTED

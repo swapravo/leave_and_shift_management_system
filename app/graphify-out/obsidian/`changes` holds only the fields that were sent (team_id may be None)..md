@@ -2,7 +2,7 @@
 source_file: "backend/app/services/org.py"
 type: "rationale"
 community: "Community 10"
-location: "L131"
+location: "L141"
 tags:
   - graphify/rationale
   - graphify/EXTRACTED

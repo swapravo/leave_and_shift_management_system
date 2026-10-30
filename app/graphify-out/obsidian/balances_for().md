@@ -12,7 +12,7 @@ tags:
 # balances_for()
 
 ## Connections
-- [[Connection_9]] - `references` [EXTRACTED]
+- [[Connection_11]] - `references` [EXTRACTED]
 - [[accrual.py]] - `contains` [EXTRACTED]
 - [[adjust()]] - `calls` [EXTRACTED]
 - [[fetch_all()]] - `calls` [EXTRACTED]

@@ -12,7 +12,7 @@ tags:
 # _set_cancelled()
 
 ## Connections
-- [[Connection_11]] - `references` [EXTRACTED]
+- [[Connection_12]] - `references` [EXTRACTED]
 - [[_cancel_approved()]] - `calls` [EXTRACTED]
 - [[cancel()_1]] - `calls` [EXTRACTED]
 - [[cancel_pending_for_user()]] - `calls` [EXTRACTED]

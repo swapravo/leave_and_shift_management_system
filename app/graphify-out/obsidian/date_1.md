@@ -11,6 +11,7 @@ tags:
 # date
 
 ## Connections
+- [[_check_birth_date()]] - `references` [EXTRACTED]
 - [[create_user()_1]] - `references` [EXTRACTED]
 
 #graphify/code #graphify/EXTRACTED #community/Community_10

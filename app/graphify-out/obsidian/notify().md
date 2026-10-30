@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/services/notify.py"
 type: "code"
-community: "Community 9"
+community: "Community 11"
 location: "L14"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_9
+  - community/Community_11
 ---
 
 # notify()
@@ -14,7 +14,7 @@ tags:
 ## Connections
 - [[3. `developer.md` how it is built]] - `references` [INFERRED]
 - [[Backend — FastAPI + aiosqlite]] - `references` [INFERRED]
-- [[Connection_12]] - `references` [EXTRACTED]
+- [[Connection_3]] - `references` [EXTRACTED]
 - [[_auto_cancel()]] - `calls` [EXTRACTED]
 - [[_cancel_approved()]] - `calls` [EXTRACTED]
 - [[_grant()]] - `calls` [EXTRACTED]
@@ -40,4 +40,4 @@ tags:
 - [[swaps.py]] - `imports` [EXTRACTED]
 - [[update_template()]] - `calls` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_9
+#graphify/code #graphify/EXTRACTED #community/Community_11

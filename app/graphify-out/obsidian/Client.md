@@ -12,7 +12,7 @@ tags:
 # Client
 
 ## Connections
-- [[dot-__init__()_1]] - `method` [EXTRACTED]
+- [[dot-__init__()]] - `method` [EXTRACTED]
 - [[dot-delete()]] - `method` [EXTRACTED]
 - [[dot-get()]] - `method` [EXTRACTED]
 - [[dot-login()]] - `calls` [EXTRACTED]

@@ -1,12 +1,12 @@
 ---
 source_file: "frontend/package.json"
 type: "code"
-community: "Community 40"
+community: "Community 5"
 location: "L13"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_40
+  - community/Community_5
 ---
 
 # dependencies
@@ -20,4 +20,4 @@ tags:
 - [[react-router@7.18.4]] - `contains` [EXTRACTED]
 - [[react@19.3.1]] - `contains` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_40
+#graphify/code #graphify/EXTRACTED #community/Community_5

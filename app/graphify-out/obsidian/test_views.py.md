@@ -1,12 +1,12 @@
 ---
 source_file: "backend/tests/test_views.py"
 type: "code"
-community: "Community 29"
+community: "Community 31"
 location: "L1"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_29
+  - community/Community_31
 ---
 
 # test_views.py
@@ -30,4 +30,4 @@ tags:
 - [[test_nobody_is_notified_about_their_own_assignment()]] - `contains` [EXTRACTED]
 - [[test_notifications_inbox()]] - `contains` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_29
+#graphify/code #graphify/EXTRACTED #community/Community_31

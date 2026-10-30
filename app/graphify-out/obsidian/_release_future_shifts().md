@@ -2,7 +2,7 @@
 source_file: "backend/app/services/org.py"
 type: "code"
 community: "Community 10"
-location: "L71"
+location: "L77"
 tags:
   - graphify/code
   - graphify/EXTRACTED
@@ -12,7 +12,7 @@ tags:
 # _release_future_shifts()
 
 ## Connections
-- [[Connection]] - `references` [EXTRACTED]
+- [[Connection_1]] - `references` [EXTRACTED]
 - [[_set_manager()]] - `calls` [EXTRACTED]
 - [[deactivate_user()_1]] - `calls` [EXTRACTED]
 - [[fetch_all()]] - `calls` [EXTRACTED]

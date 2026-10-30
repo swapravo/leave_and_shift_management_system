@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/auth.py"
 type: "rationale"
-community: "Community 17"
+community: "Community 0"
 location: "L1"
 tags:
   - graphify/rationale
   - graphify/EXTRACTED
-  - community/Community_17
+  - community/Community_0
 ---
 
 # C1 Identity & Access: password hashing, JWT cookie, the per-request context and…
@@ -14,4 +14,4 @@ tags:
 ## Connections
 - [[auth.py]] - `rationale_for` [EXTRACTED]
 
-#graphify/rationale #graphify/EXTRACTED #community/Community_17
+#graphify/rationale #graphify/EXTRACTED #community/Community_0

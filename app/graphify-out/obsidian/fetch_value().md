@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/db.py"
 type: "code"
-community: "Community 10"
+community: "Community 17"
 location: "L109"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_10
+  - community/Community_17
 ---
 
 # fetch_value()
@@ -36,4 +36,4 @@ tags:
 - [[team_manager_id()]] - `calls` [EXTRACTED]
 - [[upgrade()]] - `calls` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_10
+#graphify/code #graphify/EXTRACTED #community/Community_17

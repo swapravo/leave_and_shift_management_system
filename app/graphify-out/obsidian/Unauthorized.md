@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/errors.py"
 type: "code"
-community: "Community 17"
+community: "Community 0"
 location: "L24"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_17
+  - community/Community_0
 ---
 
 # Unauthorized
@@ -15,8 +15,8 @@ tags:
 - [[DomainError]] - `inherits` [EXTRACTED]
 - [[auth.py]] - `imports` [EXTRACTED]
 - [[errors.py]] - `contains` [EXTRACTED]
-- [[login()_1]] - `uses` [INFERRED]
+- [[login()]] - `uses` [INFERRED]
 - [[routers.py]] - `imports` [EXTRACTED]
 - [[user_from_token()]] - `calls` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_17
+#graphify/code #graphify/EXTRACTED #community/Community_0

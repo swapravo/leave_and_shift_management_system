@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/errors.py"
 type: "code"
-community: "Community 11"
+community: "Community 2"
 location: "L29"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_11
+  - community/Community_2
 ---
 
 # Forbidden
@@ -40,4 +40,4 @@ tags:
 - [[update_user()_1]] - `calls` [EXTRACTED]
 - [[views.py]] - `imports` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_11
+#graphify/code #graphify/EXTRACTED #community/Community_2

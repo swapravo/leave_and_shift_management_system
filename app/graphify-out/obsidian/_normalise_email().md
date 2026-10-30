@@ -2,7 +2,7 @@
 source_file: "backend/app/services/org.py"
 type: "code"
 community: "Community 10"
-location: "L36"
+location: "L37"
 tags:
   - graphify/code
   - graphify/EXTRACTED

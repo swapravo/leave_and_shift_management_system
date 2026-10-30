@@ -1,20 +1,23 @@
 ---
 source_file: ""
 type: "code"
-community: "Community 7"
+community: "Community 2"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_7
+  - community/Community_2
 ---
 
 # Connection
 
 ## Connections
-- [[available()]] - `references` [EXTRACTED]
-- [[balances_for()]] - `references` [EXTRACTED]
-- [[catch_up()]] - `references` [EXTRACTED]
-- [[run_monthly()_1]] - `references` [EXTRACTED]
-- [[run_year_end()_1]] - `references` [EXTRACTED]
+- [[_cells()]] - `references` [EXTRACTED]
+- [[_insert()]] - `references` [EXTRACTED]
+- [[assignment_out()]] - `references` [EXTRACTED]
+- [[assignment_problem()]] - `references` [EXTRACTED]
+- [[remove_assignments()]] - `references` [EXTRACTED]
+- [[restore()]] - `references` [EXTRACTED]
+- [[team_leaves()]] - `references` [EXTRACTED]
+- [[team_members()]] - `references` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_7
+#graphify/code #graphify/EXTRACTED #community/Community_2

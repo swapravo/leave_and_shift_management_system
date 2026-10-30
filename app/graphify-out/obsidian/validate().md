@@ -13,7 +13,7 @@ tags:
 
 ## Connections
 - [[Conflict]] - `calls` [EXTRACTED]
-- [[Connection_1]] - `references` [EXTRACTED]
+- [[Connection_4]] - `references` [EXTRACTED]
 - [[Raise SWAP_BLOCKED unless the exchange is still valid.]] - `rationale_for` [EXTRACTED]
 - [[_assignment()]] - `calls` [EXTRACTED]
 - [[_label()]] - `calls` [EXTRACTED]

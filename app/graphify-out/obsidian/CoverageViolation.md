@@ -1,12 +1,12 @@
 ---
 source_file: "frontend/src/types.ts"
 type: "code"
-community: "Community 3"
-location: "L136"
+community: "Community 1"
+location: "L137"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_3
+  - community/Community_1
 ---
 
 # CoverageViolation
@@ -15,4 +15,4 @@ tags:
 - [[types.ts]] - `contains` [EXTRACTED]
 - [[ui.tsx]] - `imports` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_3
+#graphify/code #graphify/EXTRACTED #community/Community_1

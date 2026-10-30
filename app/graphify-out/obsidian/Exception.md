@@ -1,11 +1,11 @@
 ---
 source_file: ""
 type: "code"
-community: "Community 17"
+community: "Community 8"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_17
+  - community/Community_8
 ---
 
 # Exception
@@ -13,4 +13,4 @@ tags:
 ## Connections
 - [[DomainError]] - `inherits` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_17
+#graphify/code #graphify/EXTRACTED #community/Community_8

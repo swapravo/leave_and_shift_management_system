@@ -1,12 +1,12 @@
 ---
 source_file: "frontend/src/pages/Roster.tsx"
 type: "code"
-community: "Community 1"
+community: "Community 3"
 location: "L1"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_1
+  - community/Community_3
 ---
 
 # Roster.tsx
@@ -15,7 +15,7 @@ tags:
 - [[AddPerson()]] - `contains` [EXTRACTED]
 - [[App.tsx]] - `imports_from` [EXTRACTED]
 - [[Card()]] - `imports` [EXTRACTED]
-- [[Cell()]] - `contains` [EXTRACTED]
+- [[Cell()_1]] - `contains` [EXTRACTED]
 - [[CopyWeekResult]] - `imports` [EXTRACTED]
 - [[CoverageCell]] - `imports` [EXTRACTED]
 - [[Empty()]] - `imports` [EXTRACTED]
@@ -47,4 +47,4 @@ tags:
 - [[useMe()]] - `imports` [EXTRACTED]
 - [[weekStart()]] - `imports` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_1
+#graphify/code #graphify/EXTRACTED #community/Community_3

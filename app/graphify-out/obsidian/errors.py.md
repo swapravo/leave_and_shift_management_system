@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/errors.py"
 type: "code"
-community: "Community 17"
+community: "Community 8"
 location: "L1"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_17
+  - community/Community_8
 ---
 
 # errors.py
@@ -38,4 +38,4 @@ tags:
 - [[swaps.py]] - `imports_from` [EXTRACTED]
 - [[views.py]] - `imports_from` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_17
+#graphify/code #graphify/EXTRACTED #community/Community_8

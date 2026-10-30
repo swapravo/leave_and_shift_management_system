@@ -2,7 +2,7 @@
 source_file: "backend/app/seed.py"
 type: "code"
 community: "Community 15"
-location: "L222"
+location: "L238"
 tags:
   - graphify/code
   - graphify/EXTRACTED
@@ -12,7 +12,7 @@ tags:
 # wipe()
 
 ## Connections
-- [[Connection_4]] - `references` [EXTRACTED]
+- [[Connection_5]] - `references` [EXTRACTED]
 - [[Delete every row (the audit triggers are dropped for this and re-created).]] - `rationale_for` [EXTRACTED]
 - [[audit_trigger_statements()]] - `calls` [EXTRACTED]
 - [[execute()]] - `calls` [EXTRACTED]

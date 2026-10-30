@@ -12,7 +12,7 @@ tags:
 # _assignment()
 
 ## Connections
-- [[Connection_1]] - `references` [EXTRACTED]
+- [[Connection_4]] - `references` [EXTRACTED]
 - [[fetch_one()]] - `calls` [EXTRACTED]
 - [[propose()]] - `calls` [EXTRACTED]
 - [[swaps.py]] - `contains` [EXTRACTED]

@@ -1,47 +1,42 @@
 ---
 type: community
-members: 34
+members: 29
 ---
 
 # Community 14
 
-**Members:** 34 nodes
+**Members:** 29 nodes
 
 ## Members
-- [[C4 Shift Config per-team shift templates with minimum headcount. HR for any…]] - rationale - backend/app/services/shift_templates.py
-- [[C6 Birthday leave a bonus day of Casual Leave, booked automatically on the…]] - rationale - backend/app/services/birthday.py
-- [[Connection_2]] - code
-- [[Connection_3]] - code
-- [[Domain components C2-C12. Every function takes the request's connection first…]] - rationale - backend/app/services/__init__.py
-- [[Grant every birthday leave that is due and not yet granted. Idempotent; returns…]] - rationale - backend/app/services/birthday.py
-- [[HR Admins manage every team; a manager manages the team they lead.]] - rationale - backend/app/services/common.py
-- [[Leave & Shift Management System backend.]] - rationale - backend/app/__init__.py
-- [[Small lookups and formatting shared by several components.]] - rationale - backend/app/services/common.py
-- [[The team's active manager, or None.]] - rationale - backend/app/services/common.py
+- [[dot-sql()]] - code - backend/tests/conftest.py
+- [[A Casual Leave type with Jan-Jun accrued, so a person starts with 6.0 days.]] - rationale - backend/tests/test_birthday.py
+- [[C6 Birthday leave a bonus Casual Leave day booked on the person's birthday.…]] - rationale - backend/tests/test_birthday.py
 - [[The working day that carries the birthday in `year` 29 Feb becomes 28 Feb in a…]] - rationale - backend/app/services/birthday.py
-- [[_grant()]] - code - backend/app/services/birthday.py
-- [[_leave_type()]] - code - backend/app/services/birthday.py
-- [[_name_taken()]] - code - backend/app/services/shift_templates.py
-- [[_validate()]] - code - backend/app/services/shift_templates.py
-- [[app__init__.py]] - code - backend/app/__init__.py
-- [[birthday.py]] - code - backend/app/services/birthday.py
+- [[birthday_leave()]] - code - backend/tests/test_birthday.py
 - [[booking_date()]] - code - backend/app/services/birthday.py
-- [[can_manage_team()]] - code - backend/app/services/common.py
-- [[common.py]] - code - backend/app/services/common.py
-- [[create_template()]] - code - backend/app/services/shift_templates.py
+- [[casual()]] - code - backend/tests/test_birthday.py
 - [[date_3]] - code
-- [[datetime]] - code
-- [[get_template()]] - code - backend/app/services/common.py
-- [[hr_admin_ids()]] - code - backend/app/services/common.py
-- [[intervals_overlap()]] - code - backend/app/services/common.py
-- [[list_templates()]] - code - backend/app/services/shift_templates.py
-- [[parse_days()]] - code - backend/app/services/common.py
-- [[run()]] - code - backend/app/services/birthday.py
-- [[services__init__.py]] - code - backend/app/services/__init__.py
-- [[shift_templates.py]] - code - backend/app/services/shift_templates.py
-- [[team_manager_id()]] - code - backend/app/services/common.py
-- [[template_out()]] - code - backend/app/services/common.py
-- [[update_template()]] - code - backend/app/services/shift_templates.py
+- [[fixture]] - code
+- [[parametrize]] - code
+- [[set_birth()]] - code - backend/tests/test_birthday.py
+- [[test_a_birthday_inside_the_window_books_an_approved_bonus_day()]] - code - backend/tests/test_birthday.py
+- [[test_a_manager_s_birthday_notifies_hr()]] - code - backend/tests/test_birthday.py
+- [[test_a_weekend_birthday_moves_to_the_nearest_working_day()]] - code - backend/tests/test_birthday.py
+- [[test_birthday.py]] - code - backend/tests/test_birthday.py
+- [[test_birthdays_in_the_past_or_beyond_the_window_are_not_booked_yet()]] - code - backend/tests/test_birthday.py
+- [[test_booking_date()]] - code - backend/tests/test_birthday.py
+- [[test_date_of_birth_must_be_in_the_past()]] - code - backend/tests/test_birthday.py
+- [[test_hr_admins_and_deactivated_users_get_none()]] - code - backend/tests/test_birthday.py
+- [[test_it_can_be_set_on_create_changed_and_cleared()]] - code - backend/tests/test_birthday.py
+- [[test_it_is_granted_once_even_after_the_leave_is_cancelled()]] - code - backend/tests/test_birthday.py
+- [[test_it_reads_as_approved_leave_to_the_person_and_the_calendar()]] - code - backend/tests/test_birthday.py
+- [[test_nothing_happens_without_a_casual_leave_type()]] - code - backend/tests/test_birthday.py
+- [[test_only_hr_can_see_dates_of_birth()]] - code - backend/tests/test_birthday.py
+- [[test_someone_already_on_leave_that_day_just_gets_the_bonus_day()]] - code - backend/tests/test_birthday.py
+- [[test_the_grant_is_audited_as_the_system()]] - code - backend/tests/test_birthday.py
+- [[test_the_hourly_pass_finds_birthdays_that_come_into_range()]] - code - backend/tests/test_birthday.py
+- [[test_the_last_day_of_the_window_is_included()]] - code - backend/tests/test_birthday.py
+- [[test_the_shift_that_day_comes_off_the_roster_and_the_manager_is_warned_if_it_leaves_it_short()]] - code - backend/tests/test_birthday.py
 
 ## Live Query (requires Dataview plugin)
 
@@ -51,23 +46,23 @@ SORT file.name ASC
 ```
 
 ## Connections to other communities
-- 29 edges to [[_COMMUNITY_Community 2]]
-- 28 edges to [[_COMMUNITY_Community 9]]
-- 19 edges to [[_COMMUNITY_Community 11]]
-- 18 edges to [[_COMMUNITY_Community 10]]
-- 15 edges to [[_COMMUNITY_Community 17]]
-- 10 edges to [[_COMMUNITY_Community 8]]
-- 10 edges to [[_COMMUNITY_Community 7]]
-- 6 edges to [[_COMMUNITY_Community 0]]
-- 3 edges to [[_COMMUNITY_Community 15]]
-- 2 edges to [[_COMMUNITY_Community 24]]
-- 1 edge to [[_COMMUNITY_Community 4]]
-- 1 edge to [[_COMMUNITY_Community 25]]
-- 1 edge to [[_COMMUNITY_Community 16]]
+- 11 edges to [[_COMMUNITY_Community 18]]
+- 9 edges to [[_COMMUNITY_Community 13]]
+- 8 edges to [[_COMMUNITY_Community 20]]
+- 7 edges to [[_COMMUNITY_Community 31]]
+- 7 edges to [[_COMMUNITY_Community 28]]
+- 7 edges to [[_COMMUNITY_Community 16]]
+- 6 edges to [[_COMMUNITY_Community 19]]
+- 5 edges to [[_COMMUNITY_Community 17]]
+- 2 edges to [[_COMMUNITY_Community 4]]
+- 2 edges to [[_COMMUNITY_Community 25]]
+- 1 edge to [[_COMMUNITY_Community 26]]
+- 1 edge to [[_COMMUNITY_Community 2]]
+- 1 edge to [[_COMMUNITY_Community 40]]
 
 ## Top bridge nodes
-- [[app__init__.py]] - degree 21, connects to 13 communities
-- [[services__init__.py]] - degree 13, connects to 9 communities
-- [[common.py]] - degree 29, connects to 7 communities
-- [[shift_templates.py]] - degree 28, connects to 7 communities
-- [[update_template()]] - degree 18, connects to 7 communities
+- [[dot-sql()]] - degree 41, connects to 8 communities
+- [[test_birthday.py]] - degree 36, connects to 6 communities
+- [[test_someone_already_on_leave_that_day_just_gets_the_bonus_day()]] - degree 7, connects to 3 communities
+- [[test_the_hourly_pass_finds_birthdays_that_come_into_range()]] - degree 6, connects to 3 communities
+- [[test_a_birthday_inside_the_window_books_an_approved_bonus_day()]] - degree 6, connects to 2 communities

@@ -12,7 +12,7 @@ tags:
 # get_user()
 
 ## Connections
-- [[Connection_3]] - `references` [EXTRACTED]
+- [[Connection_8]] - `references` [EXTRACTED]
 - [[_cancel_approved()]] - `calls` [EXTRACTED]
 - [[_set_manager()]] - `calls` [EXTRACTED]
 - [[_visible_user()]] - `calls` [EXTRACTED]

@@ -1,12 +1,12 @@
 ---
 source_file: "frontend/src/types.ts"
 type: "code"
-community: "Community 1"
-location: "L201"
+community: "Community 38"
+location: "L202"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_1
+  - community/Community_38
 ---
 
 # CalendarLeave
@@ -17,4 +17,4 @@ tags:
 - [[swapOptions.ts]] - `imports` [EXTRACTED]
 - [[types.ts]] - `contains` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_1
+#graphify/code #graphify/EXTRACTED #community/Community_38

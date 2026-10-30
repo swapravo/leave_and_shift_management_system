@@ -13,7 +13,7 @@ tags:
 
 ## Connections
 - [[monthly_credit()]] - `calls` [EXTRACTED]
-- [[parametrize_1]] - `references` [EXTRACTED]
+- [[parametrize_2]] - `references` [EXTRACTED]
 - [[test_accrual.py]] - `contains` [EXTRACTED]
 
 #graphify/code #graphify/EXTRACTED #community/Community_20

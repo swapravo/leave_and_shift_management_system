@@ -24,5 +24,6 @@ tags:
 - [[test_each_guard()]] - `calls` [INFERRED]
 - [[test_leave_approved_after_proposal_blocks_acceptance_and_approval()]] - `calls` [INFERRED]
 - [[test_pending_leave_on_either_date_also_blocks()]] - `calls` [INFERRED]
+- [[test_someone_already_on_leave_that_day_just_gets_the_bonus_day()]] - `calls` [INFERRED]
 
 #graphify/code #graphify/INFERRED #community/Community_16

@@ -133,7 +133,8 @@ async def _grant(conn: aiosqlite.Connection, user: dict, leave_type: dict, year:
                      f"Happy birthday! You're already on leave on {fmt_day(day)}, so a bonus {leave_type['name']} day "
                      f"was added to your balance to use whenever you like.", "/requests")
         return
-    shifts = f" Your {removed} shift(s) that day were taken off your roster." if removed else ""
+    shifts = ("" if not removed else " Your shift that day was taken off your roster." if removed == 1
+              else f" Your {removed} shifts that day were taken off your roster.")
     await notify(conn, [user["id"]], "leave",
                  f"Happy birthday! {fmt_day(day)} is booked as a bonus {leave_type['name']} day, on top of your usual "
                  f"days.{shifts}", "/requests")

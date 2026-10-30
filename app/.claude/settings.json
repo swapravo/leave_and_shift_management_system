@@ -22,14 +22,24 @@
         ]
       }
     ],
-    "PostToolUse": [
+    "SessionStart": [
       {
-        "matcher": "Edit|Write|MultiEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"$CLAUDE_PROJECT_DIR\" && /Users/swapravo/.local/bin/graphify update . >/dev/null 2>&1 && /Users/swapravo/.local/bin/graphify export obsidian --dir graphify-out/obsidian >/dev/null 2>&1 || true",
-            "timeout": 90
+            "timeout": 10,
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/start-graphify-watch.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 60,
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && /Users/swapravo/.local/bin/graphify export obsidian --dir graphify-out/obsidian >/dev/null 2>&1 || true"
           }
         ]
       }

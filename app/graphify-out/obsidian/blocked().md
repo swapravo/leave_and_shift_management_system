@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/services/swaps.py"
 type: "code"
-community: "Community 11"
+community: "Community 8"
 location: "L72"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_11
+  - community/Community_8
 ---
 
 # blocked()
@@ -15,4 +15,4 @@ tags:
 - [[Conflict]] - `calls` [EXTRACTED]
 - [[validate()]] - `contains` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_11
+#graphify/code #graphify/EXTRACTED #community/Community_8

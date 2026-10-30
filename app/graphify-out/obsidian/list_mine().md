@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/services/notify.py"
 type: "code"
-community: "Community 0"
+community: "Community 17"
 location: "L25"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_0
+  - community/Community_17
 ---
 
 # list_mine()
@@ -18,4 +18,4 @@ tags:
 - [[list_notifications()]] - `calls` [EXTRACTED]
 - [[notify.py]] - `contains` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_0
+#graphify/code #graphify/EXTRACTED #community/Community_17

@@ -12,7 +12,7 @@ tags:
 # test_bad_credentials_get_the_same_401()
 
 ## Connections
-- [[parametrize_2]] - `references` [EXTRACTED]
+- [[parametrize_3]] - `references` [EXTRACTED]
 - [[test_auth.py]] - `contains` [EXTRACTED]
 
 #graphify/code #graphify/EXTRACTED #community/Community_4

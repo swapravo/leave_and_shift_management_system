@@ -1,12 +1,12 @@
 ---
 source_file: "frontend/src/dates.ts"
 type: "code"
-community: "Community 21"
-location: "L106"
+community: "Community 6"
+location: "L112"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_21
+  - community/Community_6
 ---
 
 # istTimeNow()
@@ -18,4 +18,4 @@ tags:
 - [[greeting()]] - `calls` [EXTRACTED]
 - [[hasStarted()]] - `calls` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_21
+#graphify/code #graphify/EXTRACTED #community/Community_6

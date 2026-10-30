@@ -1,21 +1,18 @@
 ---
 source_file: ""
 type: "code"
-community: "Community 7"
+community: "Community 26"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_7
+  - community/Community_26
 ---
 
 # date
 
 ## Connections
-- [[_check()]] - `references` [EXTRACTED]
-- [[_refund_day()]] - `references` [EXTRACTED]
-- [[apply()_1]] - `references` [EXTRACTED]
-- [[on_assignment_added()]] - `references` [EXTRACTED]
-- [[preview()]] - `references` [EXTRACTED]
-- [[working_days()]] - `references` [EXTRACTED]
+- [[days()]] - `references` [EXTRACTED]
+- [[set_today()]] - `references` [EXTRACTED]
+- [[today()]] - `references` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_7
+#graphify/code #graphify/EXTRACTED #community/Community_26

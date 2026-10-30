@@ -1,11 +1,11 @@
 ---
 source_file: ""
 type: "concept"
-community: "Community 17"
+community: "Community 8"
 tags:
   - graphify/concept
   - graphify/EXTRACTED
-  - community/Community_17
+  - community/Community_8
 ---
 
 # starlette_exceptions
@@ -13,4 +13,4 @@ tags:
 ## Connections
 - [[errors.py]] - `imports_from` [EXTRACTED]
 
-#graphify/concept #graphify/EXTRACTED #community/Community_17
+#graphify/concept #graphify/EXTRACTED #community/Community_8

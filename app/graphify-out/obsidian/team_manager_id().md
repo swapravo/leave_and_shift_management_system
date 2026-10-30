@@ -1,18 +1,18 @@
 ---
 source_file: "backend/app/services/common.py"
 type: "code"
-community: "Community 14"
+community: "Community 2"
 location: "L77"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_14
+  - community/Community_2
 ---
 
 # team_manager_id()
 
 ## Connections
-- [[Connection_3]] - `references` [EXTRACTED]
+- [[Connection_8]] - `references` [EXTRACTED]
 - [[The team's active manager, or None.]] - `rationale_for` [EXTRACTED]
 - [[_grant()]] - `calls` [EXTRACTED]
 - [[approvers()_1]] - `calls` [EXTRACTED]
@@ -28,4 +28,4 @@ tags:
 - [[swaps.py]] - `imports` [EXTRACTED]
 - [[update_template()]] - `calls` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_14
+#graphify/code #graphify/EXTRACTED #community/Community_2

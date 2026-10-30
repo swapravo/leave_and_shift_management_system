@@ -13,7 +13,7 @@ tags:
 
 ## Connections
 - [[Close a year carry each balance forward up to the type's cap, the rest lapses.…]] - `rationale_for` [EXTRACTED]
-- [[Connection_9]] - `references` [EXTRACTED]
+- [[Connection_11]] - `references` [EXTRACTED]
 - [[accrual.py]] - `contains` [EXTRACTED]
 - [[catch_up()]] - `calls` [EXTRACTED]
 - [[execute()]] - `calls` [EXTRACTED]

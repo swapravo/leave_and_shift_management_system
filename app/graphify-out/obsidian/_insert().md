@@ -12,10 +12,10 @@ tags:
 # _insert()
 
 ## Connections
-- [[Connection_8]] - `references` [EXTRACTED]
+- [[Connection_9]] - `references` [EXTRACTED]
 - [[assign()_2]] - `calls` [EXTRACTED]
 - [[copy_week()_1]] - `calls` [EXTRACTED]
-- [[date_6]] - `references` [EXTRACTED]
+- [[date_7]] - `references` [EXTRACTED]
 - [[execute()]] - `calls` [EXTRACTED]
 - [[now_iso()]] - `calls` [EXTRACTED]
 - [[record()]] - `calls` [EXTRACTED]

@@ -14,7 +14,7 @@ tags:
 ## Connections
 - [[dot-leave()]] - `calls` [INFERRED]
 - [[dot-roster()]] - `calls` [INFERRED]
-- [[cell()_2]] - `calls` [EXTRACTED]
+- [[cell()]] - `calls` [EXTRACTED]
 - [[test_roster.py]] - `contains` [EXTRACTED]
 
 #graphify/code #graphify/EXTRACTED #community/Community_19

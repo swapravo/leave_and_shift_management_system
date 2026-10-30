@@ -1,11 +1,11 @@
 ---
 source_file: ""
 type: "concept"
-community: "Community 8"
+community: "Community 17"
 tags:
   - graphify/concept
   - graphify/EXTRACTED
-  - community/Community_8
+  - community/Community_17
 ---
 
 # json
@@ -15,4 +15,4 @@ tags:
 - [[audit.py]] - `imports` [EXTRACTED]
 - [[list_entries()]] - `calls` [EXTRACTED]
 
-#graphify/concept #graphify/EXTRACTED #community/Community_8
+#graphify/concept #graphify/EXTRACTED #community/Community_17

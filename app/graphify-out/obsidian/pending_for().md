@@ -12,7 +12,7 @@ tags:
 # pending_for()
 
 ## Connections
-- [[Connection_1]] - `references` [EXTRACTED]
+- [[Connection_4]] - `references` [EXTRACTED]
 - [[Swaps waiting for this actor's decision.]] - `rationale_for` [EXTRACTED]
 - [[_out()]] - `calls` [EXTRACTED]
 - [[approvers()]] - `calls` [EXTRACTED]

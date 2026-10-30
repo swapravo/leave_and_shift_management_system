@@ -11,7 +11,7 @@ tags:
 # PublicWriteConn
 
 ## Connections
-- [[login()_1]] - `references` [EXTRACTED]
+- [[login()]] - `references` [EXTRACTED]
 - [[reset()]] - `references` [EXTRACTED]
 
 #graphify/code #graphify/EXTRACTED #community/Community_0

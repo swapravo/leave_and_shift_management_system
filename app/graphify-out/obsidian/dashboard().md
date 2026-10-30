@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/services/views.py"
 type: "code"
-community: "Community 2"
+community: "Community 29"
 location: "L39"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_2
+  - community/Community_29
 ---
 
 # dashboard()
@@ -28,4 +28,4 @@ tags:
 - [[today()]] - `calls` [EXTRACTED]
 - [[views.py]] - `contains` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_2
+#graphify/code #graphify/EXTRACTED #community/Community_29

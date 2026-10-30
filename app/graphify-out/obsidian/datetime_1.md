@@ -1,11 +1,11 @@
 ---
 source_file: ""
 type: "code"
-community: "Community 17"
+community: "Community 40"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_17
+  - community/Community_40
 ---
 
 # datetime
@@ -15,4 +15,4 @@ tags:
 - [[now()]] - `references` [EXTRACTED]
 - [[real_now()]] - `references` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_17
+#graphify/code #graphify/EXTRACTED #community/Community_40

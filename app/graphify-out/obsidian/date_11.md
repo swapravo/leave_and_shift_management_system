@@ -11,9 +11,11 @@ tags:
 # date
 
 ## Connections
-- [[fmt_day()]] - `references` [EXTRACTED]
-- [[fmt_range()]] - `references` [EXTRACTED]
-- [[runs_on()]] - `references` [EXTRACTED]
-- [[shift_interval()]] - `references` [EXTRACTED]
+- [[_check()]] - `references` [EXTRACTED]
+- [[_refund_day()]] - `references` [EXTRACTED]
+- [[apply()_1]] - `references` [EXTRACTED]
+- [[on_assignment_added()]] - `references` [EXTRACTED]
+- [[preview()]] - `references` [EXTRACTED]
+- [[working_days()]] - `references` [EXTRACTED]
 
 #graphify/code #graphify/EXTRACTED #community/Community_9

@@ -15,7 +15,7 @@ tags:
 - [[dot-get()]] - `calls` [INFERRED]
 - [[dot-login()]] - `calls` [INFERRED]
 - [[dot-post()]] - `calls` [INFERRED]
-- [[parametrize_2]] - `references` [EXTRACTED]
+- [[parametrize_3]] - `references` [EXTRACTED]
 - [[test_auth.py]] - `contains` [EXTRACTED]
 
 #graphify/code #graphify/INFERRED #community/Community_4

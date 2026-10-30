@@ -60,6 +60,7 @@ tags:
 - [[test_swap_with_the_manager_is_approved_by_hr()]] - `calls` [INFERRED]
 - [[test_team_without_manager_cannot_propose()]] - `calls` [INFERRED]
 - [[test_teams_create_update_and_manager_rules()]] - `calls` [INFERRED]
+- [[test_the_shift_that_day_comes_off_the_roster_and_the_manager_is_warned_if_it_leaves_it_short()]] - `calls` [INFERRED]
 - [[test_unassigning_a_shift_auto_cancels_its_open_swap()]] - `calls` [INFERRED]
 
 #graphify/code #graphify/INFERRED #community/Community_16

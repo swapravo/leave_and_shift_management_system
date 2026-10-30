@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/services/birthday.py"
 type: "rationale"
-community: "Community 14"
+community: "Community 17"
 location: "L1"
 tags:
   - graphify/rationale
   - graphify/EXTRACTED
-  - community/Community_14
+  - community/Community_17
 ---
 
 # C6 Birthday leave: a bonus day of Casual Leave, booked automatically on the…
@@ -14,4 +14,4 @@ tags:
 ## Connections
 - [[birthday.py]] - `rationale_for` [EXTRACTED]
 
-#graphify/rationale #graphify/EXTRACTED #community/Community_14
+#graphify/rationale #graphify/EXTRACTED #community/Community_17

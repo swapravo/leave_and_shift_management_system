@@ -14,7 +14,7 @@ tags:
 ## Connections
 - [[C7 Roster and C9 Coverage Engine. Today is Wed 2026-06-10.]] - `rationale_for` [EXTRACTED]
 - [[assign()_1]] - `contains` [EXTRACTED]
-- [[cell()_2]] - `contains` [EXTRACTED]
+- [[cell()]] - `contains` [EXTRACTED]
 - [[conftest.py]] - `imports_from` [EXTRACTED]
 - [[pytest]] - `imports` [EXTRACTED]
 - [[test_assign_and_unassign()]] - `contains` [EXTRACTED]

@@ -1,23 +1,19 @@
 ---
 type: community
-members: 10
+members: 6
 ---
 
 # Community 40
 
-**Members:** 10 nodes
+**Members:** 6 nodes
 
 ## Members
-- [[@fontsource-variableoutfit]] - concept - frontend/package.json
-- [[@fontsource-variableoutfit@5.3.0]] - code - frontend/package.json
-- [[@fontsource-variablework-sans]] - concept - frontend/package.json
-- [[@fontsource-variablework-sans@5.3.0]] - code - frontend/package.json
-- [[dependencies]] - code - frontend/package.json
-- [[lucide-react@1.64.0]] - code - frontend/package.json
-- [[react-dom]] - concept - frontend/package.json
-- [[react-dom@19.3.1]] - code - frontend/package.json
-- [[react-router@7.18.4]] - code - frontend/package.json
-- [[react@19.3.1]] - code - frontend/package.json
+- [[P2 Clock the only source of today and now (IST). Nothing else calls…]] - rationale - backend/app/clock.py
+- [[The real wall clock, never pinned. Used for security timestamps (token iat,…]] - rationale - backend/app/clock.py
+- [[clock.py]] - code - backend/app/clock.py
+- [[datetime_1]] - code
+- [[real_now()]] - code - backend/app/clock.py
+- [[zoneinfo]] - concept
 
 ## Live Query (requires Dataview plugin)
 
@@ -27,13 +23,23 @@ SORT file.name ASC
 ```
 
 ## Connections to other communities
-- 5 edges to [[_COMMUNITY_Community 12]]
-- 4 edges to [[_COMMUNITY_Community 5]]
-- 1 edge to [[_COMMUNITY_Community 21]]
+- 4 edges to [[_COMMUNITY_Community 11]]
+- 4 edges to [[_COMMUNITY_Community 2]]
+- 3 edges to [[_COMMUNITY_Community 0]]
+- 3 edges to [[_COMMUNITY_Community 10]]
+- 3 edges to [[_COMMUNITY_Community 17]]
+- 2 edges to [[_COMMUNITY_Community 15]]
+- 2 edges to [[_COMMUNITY_Community 31]]
+- 2 edges to [[_COMMUNITY_Community 7]]
+- 1 edge to [[_COMMUNITY_Community 26]]
+- 1 edge to [[_COMMUNITY_Community 14]]
+- 1 edge to [[_COMMUNITY_Community 16]]
+- 1 edge to [[_COMMUNITY_Community 24]]
+- 1 edge to [[_COMMUNITY_Community 25]]
+- 1 edge to [[_COMMUNITY_Community 29]]
+- 1 edge to [[_COMMUNITY_Community 9]]
 
 ## Top bridge nodes
-- [[@fontsource-variableoutfit]] - degree 3, connects to 2 communities
-- [[@fontsource-variablework-sans]] - degree 3, connects to 2 communities
-- [[react-dom]] - degree 3, connects to 2 communities
-- [[dependencies]] - degree 7, connects to 1 community
-- [[lucide-react@1.64.0]] - degree 2, connects to 1 community
+- [[clock.py]] - degree 30, connects to 15 communities
+- [[real_now()]] - degree 6, connects to 2 communities
+- [[datetime_1]] - degree 3, connects to 1 community

@@ -13,7 +13,7 @@ tags:
 
 ## Connections
 - [[Cancel open swaps that involve any of these roster rows (they are about to…]] - `rationale_for` [EXTRACTED]
-- [[Connection_1]] - `references` [EXTRACTED]
+- [[Connection_4]] - `references` [EXTRACTED]
 - [[_auto_cancel()]] - `calls` [EXTRACTED]
 - [[fetch_all()]] - `calls` [EXTRACTED]
 - [[placeholders()]] - `calls` [EXTRACTED]

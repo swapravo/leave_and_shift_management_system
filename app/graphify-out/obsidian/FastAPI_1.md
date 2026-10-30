@@ -1,11 +1,11 @@
 ---
 source_file: ""
 type: "code"
-community: "Community 26"
+community: "Community 8"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_26
+  - community/Community_8
 ---
 
 # FastAPI
@@ -14,4 +14,4 @@ tags:
 - [[errors.py]] - `imports_from` [EXTRACTED]
 - [[install()]] - `references` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_26
+#graphify/code #graphify/EXTRACTED #community/Community_8

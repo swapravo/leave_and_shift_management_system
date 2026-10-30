@@ -12,12 +12,12 @@ tags:
 # assignment_problem()
 
 ## Connections
-- [[Connection_8]] - `references` [EXTRACTED]
+- [[Connection_9]] - `references` [EXTRACTED]
 - [[Why `user` can't be on `template` on `day`, or None if they can.]] - `rationale_for` [EXTRACTED]
 - [[_cancel_approved()]] - `calls` [EXTRACTED]
 - [[assign()_2]] - `calls` [EXTRACTED]
 - [[copy_week()_1]] - `calls` [EXTRACTED]
-- [[date_6]] - `references` [EXTRACTED]
+- [[date_7]] - `references` [EXTRACTED]
 - [[fetch_all()]] - `calls` [EXTRACTED]
 - [[fmt_day()]] - `calls` [EXTRACTED]
 - [[intervals_overlap()]] - `calls` [EXTRACTED]

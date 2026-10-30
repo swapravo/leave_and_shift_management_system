@@ -1,11 +1,11 @@
 ---
 type: community
-members: 13
+members: 16
 ---
 
 # Community 25
 
-**Members:** 13 nodes
+**Members:** 16 nodes
 
 ## Members
 - [[C6 cancellation withdraw pending; cancel approved before it starts with re-…]] - rationale - backend/tests/test_cancel.py
@@ -15,6 +15,9 @@ members: 13
 - [[test_approved_leave_cannot_be_cancelled_once_started()]] - code - backend/tests/test_cancel.py
 - [[test_cancel.py]] - code - backend/tests/test_cancel.py
 - [[test_cancel_approved_restores_shifts_and_refunds_every_day()]] - code - backend/tests/test_cancel.py
+- [[test_cancelled_leave_cannot_be_cancelled_again()]] - code - backend/tests/test_cancel.py
+- [[test_hr_sees_any_request()]] - code - backend/tests/test_cancel.py
+- [[test_only_the_requester_can_cancel()]] - code - backend/tests/test_cancel.py
 - [[test_owed_day_is_forfeited_once_the_date_passes()]] - code - backend/tests/test_cancel.py
 - [[test_owed_day_is_refunded_when_a_swap_puts_the_person_back()]] - code - backend/tests/test_cancel.py
 - [[test_owed_day_needs_as_many_shifts_as_were_removed()]] - code - backend/tests/test_cancel.py
@@ -30,17 +33,18 @@ SORT file.name ASC
 ```
 
 ## Connections to other communities
-- 14 edges to [[_COMMUNITY_Community 13]]
-- 6 edges to [[_COMMUNITY_Community 16]]
-- 3 edges to [[_COMMUNITY_Community 4]]
+- 10 edges to [[_COMMUNITY_Community 13]]
+- 9 edges to [[_COMMUNITY_Community 16]]
+- 2 edges to [[_COMMUNITY_Community 14]]
+- 2 edges to [[_COMMUNITY_Community 18]]
+- 2 edges to [[_COMMUNITY_Community 17]]
 - 1 edge to [[_COMMUNITY_Community 26]]
-- 1 edge to [[_COMMUNITY_Community 14]]
-- 1 edge to [[_COMMUNITY_Community 17]]
-- 1 edge to [[_COMMUNITY_Community 2]]
+- 1 edge to [[_COMMUNITY_Community 31]]
+- 1 edge to [[_COMMUNITY_Community 40]]
 
 ## Top bridge nodes
-- [[test_cancel.py]] - degree 21, connects to 5 communities
+- [[test_cancel.py]] - degree 21, connects to 4 communities
 - [[test_owed_day_is_forfeited_once_the_date_passes()]] - degree 7, connects to 3 communities
-- [[test_owed_day_is_refunded_when_a_swap_puts_the_person_back()]] - degree 7, connects to 2 communities
 - [[test_rostering_the_person_on_an_owed_day_refunds_it()]] - degree 6, connects to 2 communities
 - [[test_shift_that_cannot_be_restored_leaves_an_owed_day()]] - degree 6, connects to 2 communities
+- [[test_cancel_approved_restores_shifts_and_refunds_every_day()]] - degree 5, connects to 2 communities

@@ -16,7 +16,7 @@ tags:
 - [[dot-roster()]] - `calls` [INFERRED]
 - [[dot-sql()]] - `calls` [INFERRED]
 - [[assign()_1]] - `calls` [EXTRACTED]
-- [[parametrize]] - `references` [EXTRACTED]
+- [[parametrize_1]] - `references` [EXTRACTED]
 - [[test_roster.py]] - `contains` [EXTRACTED]
 
 #graphify/code #graphify/EXTRACTED #community/Community_19

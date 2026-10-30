@@ -1,12 +1,12 @@
 ---
 source_file: "frontend/src/pages/Landing.test.tsx"
 type: "code"
-community: "Community 41"
+community: "Community 12"
 location: "L1"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_41
+  - community/Community_12
 ---
 
 # Landing.test.tsx
@@ -17,4 +17,4 @@ tags:
 - [[Landing.tsx]] - `imports_from` [EXTRACTED]
 - [[react-router]] - `imports_from` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_41
+#graphify/code #graphify/EXTRACTED #community/Community_12

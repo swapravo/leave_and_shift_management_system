@@ -1,12 +1,12 @@
 ---
 source_file: "frontend/src/components/SwapSheet.tsx"
 type: "code"
-community: "Community 21"
+community: "Community 1"
 location: "L1"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_21
+  - community/Community_1
 ---
 
 # SwapSheet.tsx
@@ -41,4 +41,4 @@ tags:
 - [[useMe()]] - `imports` [EXTRACTED]
 - [[when()]] - `contains` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_21
+#graphify/code #graphify/EXTRACTED #community/Community_1

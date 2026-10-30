@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/services/shift_templates.py"
 type: "code"
-community: "Community 14"
+community: "Community 2"
 location: "L38"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_14
+  - community/Community_2
 ---
 
 # list_templates()
@@ -19,4 +19,4 @@ tags:
 - [[shift_templates.py]] - `contains` [EXTRACTED]
 - [[template_out()]] - `calls` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_14
+#graphify/code #graphify/EXTRACTED #community/Community_2

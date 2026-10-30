@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/services/common.py"
 type: "code"
-community: "Community 9"
+community: "Community 2"
 location: "L51"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_9
+  - community/Community_2
 ---
 
 # fmt_day()
@@ -22,7 +22,7 @@ tags:
 - [[birthday.py]] - `imports` [EXTRACTED]
 - [[common.py]] - `contains` [EXTRACTED]
 - [[copy_week()_1]] - `calls` [EXTRACTED]
-- [[date_11]] - `references` [EXTRACTED]
+- [[date_6]] - `references` [EXTRACTED]
 - [[fmt_range()]] - `calls` [EXTRACTED]
 - [[leave.py]] - `imports` [EXTRACTED]
 - [[on_assignment_added()]] - `calls` [EXTRACTED]
@@ -31,4 +31,4 @@ tags:
 - [[swaps.py]] - `imports` [EXTRACTED]
 - [[validate()]] - `calls` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_9
+#graphify/code #graphify/EXTRACTED #community/Community_2

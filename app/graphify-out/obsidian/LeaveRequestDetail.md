@@ -1,12 +1,12 @@
 ---
 source_file: "frontend/src/types.ts"
 type: "code"
-community: "Community 21"
-location: "L131"
+community: "Community 1"
+location: "L132"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_21
+  - community/Community_1
 ---
 
 # LeaveRequestDetail
@@ -17,4 +17,4 @@ tags:
 - [[api.ts]] - `imports` [EXTRACTED]
 - [[types.ts]] - `contains` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_21
+#graphify/code #graphify/EXTRACTED #community/Community_1

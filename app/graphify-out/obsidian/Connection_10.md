@@ -1,16 +1,19 @@
 ---
 source_file: ""
 type: "code"
-community: "Community 9"
+community: "Community 29"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_9
+  - community/Community_29
 ---
 
 # Connection
 
 ## Connections
-- [[record()]] - `references` [EXTRACTED]
+- [[coverage_grid()]] - `references` [EXTRACTED]
+- [[gaps()]] - `references` [EXTRACTED]
+- [[leave_violations()]] - `references` [EXTRACTED]
+- [[leaves_by_user()]] - `references` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_9
+#graphify/code #graphify/EXTRACTED #community/Community_29

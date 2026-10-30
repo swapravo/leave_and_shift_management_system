@@ -1,18 +1,18 @@
 ---
 source_file: "backend/app/services/common.py"
 type: "code"
-community: "Community 14"
+community: "Community 2"
 location: "L60"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_14
+  - community/Community_2
 ---
 
 # get_template()
 
 ## Connections
-- [[Connection_3]] - `references` [EXTRACTED]
+- [[Connection_8]] - `references` [EXTRACTED]
 - [[_cancel_approved()]] - `calls` [EXTRACTED]
 - [[assign()_2]] - `calls` [EXTRACTED]
 - [[common.py]] - `contains` [EXTRACTED]
@@ -28,4 +28,4 @@ tags:
 - [[update_template()]] - `calls` [EXTRACTED]
 - [[validate()]] - `calls` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_14
+#graphify/code #graphify/EXTRACTED #community/Community_2

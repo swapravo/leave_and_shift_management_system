@@ -12,7 +12,7 @@ tags:
 # _in_open_swap()
 
 ## Connections
-- [[Connection_1]] - `references` [EXTRACTED]
+- [[Connection_4]] - `references` [EXTRACTED]
 - [[fetch_value()]] - `calls` [EXTRACTED]
 - [[propose()]] - `calls` [EXTRACTED]
 - [[swaps.py]] - `contains` [EXTRACTED]

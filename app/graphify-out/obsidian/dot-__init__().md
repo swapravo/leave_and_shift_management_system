@@ -1,17 +1,17 @@
 ---
-source_file: "backend/app/errors.py"
+source_file: "backend/tests/conftest.py"
 type: "code"
-community: "Community 17"
-location: "L12"
+community: "Community 4"
+location: "L47"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_17
+  - community/Community_4
 ---
 
 # .__init__()
 
 ## Connections
-- [[DomainError]] - `method` [EXTRACTED]
+- [[Client]] - `method` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_17
+#graphify/code #graphify/EXTRACTED #community/Community_4

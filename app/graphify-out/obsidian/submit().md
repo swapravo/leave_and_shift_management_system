@@ -12,7 +12,7 @@ tags:
 # submit()
 
 ## Connections
-- [[Login()]] - `contains` [EXTRACTED]
+- [[Login()_1]] - `contains` [EXTRACTED]
 - [[homeFor()]] - `calls` [EXTRACTED]
 
 #graphify/code #graphify/EXTRACTED #community/Community_12

@@ -44,6 +44,7 @@ tags:
 - [[seed.py]] - `imports_from` [EXTRACTED]
 - [[shift_templates.py]] - `imports_from` [EXTRACTED]
 - [[swaps.py]] - `imports_from` [EXTRACTED]
+- [[test_birthday.py]] - `imports_from` [EXTRACTED]
 - [[test_schema.py]] - `imports_from` [EXTRACTED]
 - [[transaction()]] - `contains` [EXTRACTED]
 - [[typing]] - `imports_from` [EXTRACTED]

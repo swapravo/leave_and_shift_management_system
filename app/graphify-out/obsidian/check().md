@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/auth.py"
 type: "code"
-community: "Community 17"
+community: "Community 0"
 location: "L40"
 tags:
   - graphify/code
   - graphify/INFERRED
-  - community/Community_17
+  - community/Community_0
 ---
 
 # check()
@@ -14,4 +14,4 @@ tags:
 ## Connections
 - [[verify_password()]] - `indirect_call` [INFERRED]
 
-#graphify/code #graphify/INFERRED #community/Community_17
+#graphify/code #graphify/INFERRED #community/Community_0

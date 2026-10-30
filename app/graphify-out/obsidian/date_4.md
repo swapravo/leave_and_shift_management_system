@@ -12,6 +12,7 @@ tags:
 
 ## Connections
 - [[_approved_leave()]] - `references` [EXTRACTED]
+- [[_birth_date()]] - `references` [EXTRACTED]
 - [[_first_weekday_on_or_after()]] - `references` [EXTRACTED]
 - [[_window()]] - `references` [EXTRACTED]
 

@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/auth.py"
 type: "code"
-community: "Community 8"
+community: "Community 7"
 location: "L112"
 tags:
   - graphify/code
   - graphify/INFERRED
-  - community/Community_8
+  - community/Community_7
 ---
 
 # Ctx
@@ -73,4 +73,4 @@ tags:
 - [[update_user()_1]] - `uses` [INFERRED]
 - [[views.py]] - `imports` [EXTRACTED]
 
-#graphify/code #graphify/INFERRED #community/Community_8
+#graphify/code #graphify/INFERRED #community/Community_7

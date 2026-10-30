@@ -1,12 +1,12 @@
 ---
 source_file: "frontend/package.json"
 type: "concept"
-community: "Community 44"
+community: "Community 5"
 location: "L23"
 tags:
   - graphify/concept
   - graphify/EXTRACTED
-  - community/Community_44
+  - community/Community_5
 ---
 
 # @testing-library/jest-dom
@@ -16,4 +16,4 @@ tags:
 - [[package.json]] - `imports` [EXTRACTED]
 - [[test-setup.ts]] - `imports_from` [EXTRACTED]
 
-#graphify/concept #graphify/EXTRACTED #community/Community_44
+#graphify/concept #graphify/EXTRACTED #community/Community_5

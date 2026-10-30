@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/db.py"
 type: "code"
-community: "Community 17"
+community: "Community 28"
 location: "L34"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_17
+  - community/Community_28
 ---
 
 # init_db()
@@ -17,6 +17,9 @@ tags:
 - [[_main()]] - `calls` [EXTRACTED]
 - [[db.py]] - `contains` [EXTRACTED]
 - [[startup()]] - `calls` [EXTRACTED]
+- [[test_an_older_database_is_upgraded_in_place()]] - `calls` [EXTRACTED]
+- [[test_birthday.py]] - `imports` [EXTRACTED]
 - [[upgrade()]] - `calls` [EXTRACTED]
+- [[upgrade()_1]] - `calls` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_17
+#graphify/code #graphify/EXTRACTED #community/Community_28

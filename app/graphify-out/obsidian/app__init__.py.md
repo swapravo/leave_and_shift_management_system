@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/__init__.py"
 type: "code"
-community: "Community 14"
+community: "Community 17"
 location: "L1"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_14
+  - community/Community_17
 ---
 
 # app/__init__.py
@@ -34,4 +34,4 @@ tags:
 - [[test_swaps.py]] - `imports_from` [EXTRACTED]
 - [[views.py]] - `imports_from` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_14
+#graphify/code #graphify/EXTRACTED #community/Community_17

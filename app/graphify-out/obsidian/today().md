@@ -14,6 +14,7 @@ tags:
 ## Connections
 - [[_cancel_approved()]] - `calls` [EXTRACTED]
 - [[_check()]] - `calls` [EXTRACTED]
+- [[_check_birth_date()]] - `calls` [EXTRACTED]
 - [[_detail()]] - `calls` [EXTRACTED]
 - [[_main()]] - `calls` [EXTRACTED]
 - [[_out()_1]] - `calls` [EXTRACTED]
@@ -26,7 +27,7 @@ tags:
 - [[copy_week()_1]] - `calls` [EXTRACTED]
 - [[create_user()_1]] - `calls` [EXTRACTED]
 - [[dashboard()]] - `calls` [EXTRACTED]
-- [[date_8]] - `references` [EXTRACTED]
+- [[date_9]] - `references` [EXTRACTED]
 - [[decide()_1]] - `calls` [EXTRACTED]
 - [[expire_owed_days()]] - `calls` [EXTRACTED]
 - [[get_balances()_1]] - `calls` [EXTRACTED]

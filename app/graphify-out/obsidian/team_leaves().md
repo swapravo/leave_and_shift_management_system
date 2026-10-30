@@ -12,9 +12,9 @@ tags:
 # team_leaves()
 
 ## Connections
-- [[Connection_8]] - `references` [EXTRACTED]
+- [[Connection_9]] - `references` [EXTRACTED]
 - [[calendar()]] - `calls` [EXTRACTED]
-- [[date_6]] - `references` [EXTRACTED]
+- [[date_7]] - `references` [EXTRACTED]
 - [[fetch_all()]] - `calls` [EXTRACTED]
 - [[placeholders()]] - `calls` [EXTRACTED]
 - [[roster.py]] - `contains` [EXTRACTED]

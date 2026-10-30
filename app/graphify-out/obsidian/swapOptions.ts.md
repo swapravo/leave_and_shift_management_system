@@ -1,12 +1,12 @@
 ---
 source_file: "frontend/src/swapOptions.ts"
 type: "code"
-community: "Community 1"
+community: "Community 38"
 location: "L1"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_1
+  - community/Community_38
 ---
 
 # swapOptions.ts
@@ -27,4 +27,4 @@ tags:
 - [[swapOptions.test.ts]] - `imports_from` [EXTRACTED]
 - [[types.ts]] - `imports_from` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_1
+#graphify/code #graphify/EXTRACTED #community/Community_38

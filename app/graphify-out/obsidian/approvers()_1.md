@@ -12,7 +12,7 @@ tags:
 # approvers()
 
 ## Connections
-- [[Connection_11]] - `references` [EXTRACTED]
+- [[Connection_12]] - `references` [EXTRACTED]
 - [[_can_decide()]] - `calls` [EXTRACTED]
 - [[_cancel_approved()]] - `calls` [EXTRACTED]
 - [[_check()]] - `calls` [EXTRACTED]

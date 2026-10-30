@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/clock.py"
 type: "code"
-community: "Community 17"
+community: "Community 40"
 location: "L1"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_17
+  - community/Community_40
 ---
 
 # clock.py
@@ -36,10 +36,11 @@ tags:
 - [[set_today()]] - `contains` [EXTRACTED]
 - [[shift_templates.py]] - `imports_from` [EXTRACTED]
 - [[swaps.py]] - `imports_from` [EXTRACTED]
+- [[test_birthday.py]] - `imports_from` [EXTRACTED]
 - [[test_cancel.py]] - `imports_from` [EXTRACTED]
 - [[test_swaps.py]] - `imports_from` [EXTRACTED]
 - [[today()]] - `contains` [EXTRACTED]
 - [[views.py]] - `imports_from` [EXTRACTED]
 - [[zoneinfo]] - `imports_from` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_17
+#graphify/code #graphify/EXTRACTED #community/Community_40

@@ -14,6 +14,7 @@ tags:
 ## Connections
 - [[DomainError]] - `inherits` [EXTRACTED]
 - [[_check()]] - `uses` [INFERRED]
+- [[_check_birth_date()]] - `calls` [EXTRACTED]
 - [[_check_password()]] - `calls` [EXTRACTED]
 - [[_check_team()]] - `calls` [EXTRACTED]
 - [[_check_team_name()]] - `calls` [EXTRACTED]

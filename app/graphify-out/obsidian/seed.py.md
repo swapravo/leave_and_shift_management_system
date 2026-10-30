@@ -14,6 +14,7 @@ tags:
 ## Connections
 - [[P4 Seed deterministic demo data relative to clock.today() (data model 5.5). P5…]] - `rationale_for` [EXTRACTED]
 - [[_approved_leave()]] - `contains` [EXTRACTED]
+- [[_birth_date()]] - `contains` [EXTRACTED]
 - [[_email()]] - `contains` [EXTRACTED]
 - [[_first_weekday_on_or_after()]] - `contains` [EXTRACTED]
 - [[_main()]] - `contains` [EXTRACTED]
@@ -26,6 +27,7 @@ tags:
 - [[asyncio]] - `imports` [EXTRACTED]
 - [[audit.py]] - `imports_from` [EXTRACTED]
 - [[auth.py]] - `imports_from` [EXTRACTED]
+- [[birthday.py]] - `imports_from` [EXTRACTED]
 - [[clock.py]] - `imports_from` [EXTRACTED]
 - [[common.py]] - `imports_from` [EXTRACTED]
 - [[config.py]] - `imports_from` [EXTRACTED]

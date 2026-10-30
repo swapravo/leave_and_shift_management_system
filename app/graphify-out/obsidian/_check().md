@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/services/leave.py"
 type: "code"
-community: "Community 7"
+community: "Community 9"
 location: "L121"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_7
+  - community/Community_9
 ---
 
 # _check()
@@ -22,7 +22,7 @@ tags:
 - [[apply()_1]] - `calls` [EXTRACTED]
 - [[approvers()_1]] - `calls` [EXTRACTED]
 - [[available()]] - `calls` [EXTRACTED]
-- [[date_9]] - `references` [EXTRACTED]
+- [[date_11]] - `references` [EXTRACTED]
 - [[fetch_one()]] - `calls` [EXTRACTED]
 - [[fmt_range()]] - `calls` [EXTRACTED]
 - [[leave.py]] - `contains` [EXTRACTED]
@@ -32,4 +32,4 @@ tags:
 - [[today()]] - `calls` [EXTRACTED]
 - [[working_days()]] - `calls` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_7
+#graphify/code #graphify/EXTRACTED #community/Community_9

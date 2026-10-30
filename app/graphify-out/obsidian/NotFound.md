@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/errors.py"
 type: "code"
-community: "Community 10"
+community: "Community 2"
 location: "L34"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_10
+  - community/Community_2
 ---
 
 # NotFound
@@ -47,4 +47,4 @@ tags:
 - [[update_user()_1]] - `calls` [EXTRACTED]
 - [[views.py]] - `imports` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_10
+#graphify/code #graphify/EXTRACTED #community/Community_2

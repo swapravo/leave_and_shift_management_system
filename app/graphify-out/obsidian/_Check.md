@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/services/leave.py"
 type: "code"
-community: "Community 7"
+community: "Community 9"
 location: "L111"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_7
+  - community/Community_9
 ---
 
 # _Check
@@ -17,4 +17,4 @@ tags:
 - [[_check()]] - `calls` [EXTRACTED]
 - [[leave.py]] - `contains` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_7
+#graphify/code #graphify/EXTRACTED #community/Community_9

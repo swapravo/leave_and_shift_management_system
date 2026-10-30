@@ -11,13 +11,9 @@ tags:
 # Connection
 
 ## Connections
-- [[_cells()]] - `references` [EXTRACTED]
-- [[_insert()]] - `references` [EXTRACTED]
-- [[assignment_out()]] - `references` [EXTRACTED]
-- [[assignment_problem()]] - `references` [EXTRACTED]
-- [[remove_assignments()]] - `references` [EXTRACTED]
-- [[restore()]] - `references` [EXTRACTED]
-- [[team_leaves()]] - `references` [EXTRACTED]
-- [[team_members()]] - `references` [EXTRACTED]
+- [[get_template()]] - `references` [EXTRACTED]
+- [[get_user()]] - `references` [EXTRACTED]
+- [[hr_admin_ids()]] - `references` [EXTRACTED]
+- [[team_manager_id()]] - `references` [EXTRACTED]
 
 #graphify/code #graphify/EXTRACTED #community/Community_2

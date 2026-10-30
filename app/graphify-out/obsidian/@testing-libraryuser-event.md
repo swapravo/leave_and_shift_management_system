@@ -1,12 +1,12 @@
 ---
 source_file: "frontend/package.json"
 type: "concept"
-community: "Community 41"
+community: "Community 5"
 location: "L25"
 tags:
   - graphify/concept
   - graphify/EXTRACTED
-  - community/Community_41
+  - community/Community_5
 ---
 
 # @testing-library/user-event
@@ -17,4 +17,4 @@ tags:
 - [[package.json]] - `imports` [EXTRACTED]
 - [[ui.test.tsx]] - `imports_from` [EXTRACTED]
 
-#graphify/concept #graphify/EXTRACTED #community/Community_41
+#graphify/concept #graphify/EXTRACTED #community/Community_5

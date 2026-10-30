@@ -2,7 +2,7 @@
 source_file: "backend/app/seed.py"
 type: "code"
 community: "Community 15"
-location: "L66"
+location: "L75"
 tags:
   - graphify/code
   - graphify/EXTRACTED

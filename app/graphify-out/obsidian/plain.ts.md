@@ -12,6 +12,7 @@ tags:
 # plain.ts
 
 ## Connections
+- [[BIRTHDAY_LEAVE_REASON]] - `contains` [EXTRACTED]
 - [[Calendar.tsx]] - `imports_from` [EXTRACTED]
 - [[Home.tsx]] - `imports_from` [EXTRACTED]
 - [[LeaveRequest]] - `imports` [EXTRACTED]

@@ -2,7 +2,7 @@
 source_file: "backend/app/services/org.py"
 type: "code"
 community: "Community 10"
-location: "L61"
+location: "L67"
 tags:
   - graphify/code
   - graphify/EXTRACTED
@@ -12,7 +12,7 @@ tags:
 # _email_taken()
 
 ## Connections
-- [[Connection]] - `references` [EXTRACTED]
+- [[Connection_1]] - `references` [EXTRACTED]
 - [[create_user()_1]] - `calls` [EXTRACTED]
 - [[fetch_value()]] - `calls` [EXTRACTED]
 - [[org.py]] - `contains` [EXTRACTED]

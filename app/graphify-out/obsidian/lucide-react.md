@@ -1,12 +1,12 @@
 ---
 source_file: "frontend/package.json"
 type: "concept"
-community: "Community 21"
+community: "Community 12"
 location: "L16"
 tags:
   - graphify/concept
   - graphify/EXTRACTED
-  - community/Community_21
+  - community/Community_12
 ---
 
 # lucide-react
@@ -24,4 +24,4 @@ tags:
 - [[package.json]] - `imports` [EXTRACTED]
 - [[ui.tsx]] - `imports_from` [EXTRACTED]
 
-#graphify/concept #graphify/EXTRACTED #community/Community_21
+#graphify/concept #graphify/EXTRACTED #community/Community_12

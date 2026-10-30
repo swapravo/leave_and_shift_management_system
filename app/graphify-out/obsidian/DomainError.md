@@ -1,18 +1,18 @@
 ---
 source_file: "backend/app/errors.py"
 type: "code"
-community: "Community 17"
+community: "Community 8"
 location: "L8"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_17
+  - community/Community_8
 ---
 
 # DomainError
 
 ## Connections
-- [[dot-__init__()]] - `method` [EXTRACTED]
+- [[dot-__init__()_1]] - `method` [EXTRACTED]
 - [[3. `developer.md` how it is built]] - `references` [INFERRED]
 - [[Conflict]] - `inherits` [EXTRACTED]
 - [[Exception]] - `inherits` [EXTRACTED]
@@ -24,4 +24,4 @@ tags:
 - [[errors.py]] - `contains` [EXTRACTED]
 - [[leave.py]] - `imports` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_17
+#graphify/code #graphify/EXTRACTED #community/Community_8

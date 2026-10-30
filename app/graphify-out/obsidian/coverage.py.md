@@ -1,12 +1,12 @@
 ---
 source_file: "backend/app/services/coverage.py"
 type: "code"
-community: "Community 2"
+community: "Community 29"
 location: "L1"
 tags:
   - graphify/code
   - graphify/EXTRACTED
-  - community/Community_2
+  - community/Community_29
 ---
 
 # coverage.py
@@ -15,6 +15,7 @@ tags:
 - [[C9 Coverage Engine the only place headcount and gaps are computed. Read-only.…]] - `rationale_for` [EXTRACTED]
 - [[aiosqlite]] - `imports` [EXTRACTED]
 - [[app__init__.py]] - `imports_from` [EXTRACTED]
+- [[birthday.py]] - `imports_from` [EXTRACTED]
 - [[clock.py]] - `imports_from` [EXTRACTED]
 - [[collections]] - `imports_from` [EXTRACTED]
 - [[common.py]] - `imports_from` [EXTRACTED]
@@ -32,4 +33,4 @@ tags:
 - [[swaps.py]] - `imports_from` [EXTRACTED]
 - [[views.py]] - `imports_from` [EXTRACTED]
 
-#graphify/code #graphify/EXTRACTED #community/Community_2
+#graphify/code #graphify/EXTRACTED #community/Community_29
